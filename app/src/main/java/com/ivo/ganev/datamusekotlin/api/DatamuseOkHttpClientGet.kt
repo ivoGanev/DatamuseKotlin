@@ -1,12 +1,12 @@
 package com.ivo.ganev.datamusekotlin.api
 
-import com.ivo.ganev.datamusekotlin.internal.HttpClient
+import com.ivo.ganev.datamusekotlin.internal.HttpClientGet
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
-class DatamuseOkHttpClient : HttpClient {
+class DatamuseOkHttpClientGet : HttpClientGet {
     private val client: OkHttpClient = OkHttpClient()
 
     override suspend fun get(url: String): String {

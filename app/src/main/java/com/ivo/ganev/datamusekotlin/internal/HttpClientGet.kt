@@ -1,5 +1,5 @@
 package com.ivo.ganev.datamusekotlin.internal
 
-interface HttpClient {
+interface HttpClientGet {
    suspend fun get(url: String) : String
 }
