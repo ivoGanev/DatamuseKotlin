@@ -1,0 +1,62 @@
+[
+  {
+    "word": "fretful",
+    "score": 398,
+    "numSyllables": 2,
+    "tags": [
+      "pron:F R EH1 T F AH0 L ",
+      "f:0.573512"
+    ]
+  },
+  {
+    "word": "regretful",
+    "score": 302,
+    "numSyllables": 3,
+    "tags": [
+      "pron:R IH0 G R EH1 T F AH0 L ",
+      "f:0.423219"
+    ]
+  },
+  {
+    "word": "threatful",
+    "score": 129,
+    "numSyllables": 2,
+    "tags": [
+      "pron:TH R IY1 T F AH0 L ",
+      "f:0.005975"
+    ]
+  },
+  {
+    "word": "netful",
+    "score": 28,
+    "numSyllables": 2,
+    "tags": [
+      "pron:N EH1 T F AH0 L ",
+      "f:0.006418"
+    ]
+  },
+  {
+    "word": "let phil",
+    "numSyllables": 2,
+    "tags": [
+      "pron:L EH1 T F IH0 L ",
+      "f:0.000000"
+    ]
+  },
+  {
+    "word": "met phil",
+    "numSyllables": 2,
+    "tags": [
+      "pron:M EH1 T F IH0 L ",
+      "f:0.015065"
+    ]
+  },
+  {
+    "word": "set fill",
+    "numSyllables": 2,
+    "tags": [
+      "pron:S EH1 T F IH0 L ",
+      "f:0.000000"
+    ]
+  }
+]
