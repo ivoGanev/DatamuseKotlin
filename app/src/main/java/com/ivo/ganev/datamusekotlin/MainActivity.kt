@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClientGet
 import com.ivo.ganev.datamusekotlin.internal.WordRequest
-import com.ivo.ganev.datamusekotlin.internal.Words
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
