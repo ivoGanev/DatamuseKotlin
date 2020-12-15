@@ -8,7 +8,7 @@ import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
 import kotlin.test.fail
 
-class HttpResponseTest {
+class HttpDatamuseJsonResponseTest {
     @Test
     fun `is response a result`() {
         val response = HttpResponse.Result("Result")

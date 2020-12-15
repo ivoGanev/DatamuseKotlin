@@ -1,27 +1,27 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.ivo.ganev.datamusekotlin.internal.DatamuseKotlinWordMapper
-import com.ivo.ganev.datamusekotlin.internal.WordRequest
+import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
+import kotlinx.serialization.InternalSerializationApi
 import org.junit.Test
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class DatamuseKotlinWordMapperTest {
+class DatamuseKotlinWordRequestMapperTest {
     companion object RequestFile {
         const val DEFINITIONS = "word-request-metadata-definitions.json"
         const val SIMPLE = "word-request-simple.json"
         const val SYLLABLES = "word-request-syllables.json"
         const val TAGS = "word-request-tags.json"
     }
-
+    
     @Test
-    fun testMapper() {
+    fun testDefinitions() {
         val file = read(DEFINITIONS)
-        val mapper = DatamuseKotlinWordMapper()
+        val mapper = KotlinJsonWordDecoder()
         val mapWords = mapper.map(file)
         mapWords.forEach {
-            println(it)
+            println(it.elements)
         }
     }
 
