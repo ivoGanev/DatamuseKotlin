@@ -5,12 +5,12 @@ import kotlinx.serialization.json.Json
 
 
 internal interface DatamuseJsonResponseDecoder {
-    fun map(jsonString: String): Set<DatamuseJsonResponse>
+    fun decode(jsonString: String): Set<DatamuseJsonWordResponse>
 }
 
 internal class KotlinJsonWordDecoder : DatamuseJsonResponseDecoder {
-    override fun map(jsonString: String): Set<DatamuseJsonResponse> =
+    override fun decode(jsonString: String): Set<DatamuseJsonWordResponse> =
         Json { ignoreUnknownKeys = true }.decodeFromString(
-            SetSerializer(DatamuseJsonResponse.serializer()), jsonString
+            SetSerializer(DatamuseJsonWordResponse.serializer()), jsonString
         )
 }

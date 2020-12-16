@@ -1,8 +1,8 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse.Element.*
 import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
-import kotlinx.serialization.InternalSerializationApi
 import org.junit.Test
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -14,15 +14,19 @@ class DatamuseKotlinWordRequestMapperTest {
         const val SYLLABLES = "word-request-syllables.json"
         const val TAGS = "word-request-tags.json"
     }
-    
+
     @Test
     fun testDefinitions() {
-        val file = read(DEFINITIONS)
+        val file = read(SIMPLE)
         val mapper = KotlinJsonWordDecoder()
-        val mapWords = mapper.map(file)
+        val mapWords = mapper.decode(file)
         mapWords.forEach {
-            println(it.elements)
+            //println(it.elements)
         }
+        val elementAt = mapWords.elementAt(0)
+        val list = elementAt[Score::class]
+
+        println(list)
     }
 
     private fun read(path: String): String {
