@@ -18,10 +18,12 @@ import kotlin.reflect.KClass
 
 @Keep
 @Serializable(with = ResponseSerializer::class)
-internal class DatamuseJsonWordResponse(val elements: Set<Element>) {
+internal class DatamuseJsonWordResponse(private val elements: Set<Element>) {
+
+    val responseSize get() = elements.size
+
     @Serializable
     internal sealed class Element {
-
         @Serializable
         data class Word(val word: String) : Element()
 
@@ -41,8 +43,35 @@ internal class DatamuseJsonWordResponse(val elements: Set<Element>) {
         data class DefHeadwords(val defHeadword: String = "") : Element()
     }
 
-    operator fun <T : Element> get(element: KClass<T>) =
-        elements.find { element.isInstance(it) }
+    /**
+     * *  Retrieves a single element from the element set: [elements]
+     * @param element is a KClass of type [Element] like [Score]. Example "Score::class"
+     *
+     * Example: Let's look at the JSON response:
+     * [
+     *  {
+     *      "word": "hippopotamus",
+     *      "score": 501
+     *  },
+     *  {
+     *      "word": "hippotamus",
+     *      "score": 3
+     *  }
+     * ]
+     *
+     * Let's say that "response" is a retrieved [DatamuseJsonWordResponse] variable
+     * and we want to get the score from the second array element which would be "3".
+     * We can do this with the index access operator like: response.elementAt(1)[Score::class],
+     * which will give us the single [Element] object in our case [Score] with value of "3".
+     *
+     * @returns [Element] if the set contains it and null when there is
+     * no element of the provided type.
+     * */
+    inline operator fun <reified T : Element> get(element: KClass<T>): T? {
+        return elements.find { element.isInstance(it) && element != Element::class } as T?
+    }
+
+
 }
 
 

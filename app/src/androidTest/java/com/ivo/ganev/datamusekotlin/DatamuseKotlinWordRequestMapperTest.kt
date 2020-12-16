@@ -1,11 +1,14 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
+import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse
 import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse.Element.*
 import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
+import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.Before
 import org.junit.Test
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class DatamuseKotlinWordRequestMapperTest {
     companion object RequestFile {
@@ -15,26 +18,114 @@ class DatamuseKotlinWordRequestMapperTest {
         const val TAGS = "word-request-tags.json"
     }
 
-    @Test
-    fun testDefinitions() {
-        val file = read(SIMPLE)
-        val mapper = KotlinJsonWordDecoder()
-        val mapWords = mapper.decode(file)
-        mapWords.forEach {
-            //println(it.elements)
-        }
-        val elementAt = mapWords.elementAt(0)
-        val list = elementAt[Score::class]
+    private lateinit var firstResponseElement: DatamuseJsonWordResponse
+    private lateinit var lastResponseElement: DatamuseJsonWordResponse
 
-        println(list)
+    private var firstWord: Word? = null
+    private var firstScore: Score? = null
+    private var firstNumSyllablesCount: SyllablesCount? = null
+    private var firstTags: Tags? = null
+    private var firstDefinitions: Definitions? = null
+    private var firstDefHeadwords: DefHeadwords? = null
+
+    private var lastWord: Word? = null
+    private var lastScore: Score? = null
+    private var lastNumSyllablesCount: SyllablesCount? = null
+    private var lastTags: Tags? = null
+    private var lastDefinitions: Definitions? = null
+    private var lastDefHeadwords: DefHeadwords? = null
+
+    private lateinit var wordDecoder: KotlinJsonWordDecoder
+
+    @Before
+    fun setUp() {
+        wordDecoder = KotlinJsonWordDecoder()
+        firstResponseElement =  DatamuseJsonWordResponse(emptySet())
+        lastResponseElement =  DatamuseJsonWordResponse(emptySet())
     }
 
-    private fun read(path: String): String {
-        val assets = InstrumentationRegistry.getInstrumentation().targetContext.assets
-        val file = assets.open(path)
-        val reader = BufferedReader(InputStreamReader(file))
-        reader.use {
-            return it.readText()
-        }
+    @Test
+    fun wordDecoderDecodesCorrectlyTagRequests() {
+        // Arrange
+        val file = InstrumentationRegistry.getInstrumentation()
+            .targetContext
+            .assets
+            .readAssetFile(TAGS)
+
+        // Act - make word decoder to decode the provided JSON file
+        val wordResponseSet = wordDecoder.decode(file)
+        bindResponse(wordResponseSet)
+
+        // Assert
+        wordResponseSet.size shouldBeEqualTo 7
+
+        firstWord shouldBeEqualTo Word("fretful")
+        firstScore shouldBeEqualTo Score(398)
+        firstNumSyllablesCount shouldBeEqualTo SyllablesCount(2)
+        firstTags!!.tags[0] shouldBeEqualTo "pron:F R EH1 T F AH0 L "
+        firstTags!!.tags[1] shouldBeEqualTo "f:0.573512"
+        firstTags!!.tags.size shouldBeEqualTo 2
+        firstDefinitions shouldBe null
+        firstDefHeadwords shouldBe null
+
+        lastWord shouldBeEqualTo Word("set fill")
+        lastScore shouldBeEqualTo null
+        lastNumSyllablesCount shouldBeEqualTo SyllablesCount(2)
+        lastTags!!.tags[0] shouldBeEqualTo "pron:S EH1 T F IH0 L "
+        lastTags!!.tags[1] shouldBeEqualTo "f:0.000000"
+        lastTags!!.tags.size shouldBeEqualTo 2
+        lastDefinitions shouldBe null
+        lastDefHeadwords shouldBe null
+    }
+
+    @Test
+    fun wordDecoderDecodesCorrectlyDefinitionsRequests() {
+        // Arrange
+        val file = InstrumentationRegistry.getInstrumentation()
+            .targetContext
+            .assets
+            .readAssetFile(DEFINITIONS)
+
+        // Act - make word decoder to decode the provided JSON file
+        val wordResponseSet = wordDecoder.decode(file)
+        bindResponse(wordResponseSet)
+
+        // Assert
+        wordResponseSet.size shouldBeEqualTo 21
+
+        firstWord shouldBeEqualTo Word("birds")
+        firstScore shouldBeEqualTo Score(700)
+        firstNumSyllablesCount shouldBeEqualTo SyllablesCount(1)
+        firstTags shouldBe null
+        firstDefinitions!!.defs.first() shouldBeEqualTo   "n\twarm-blooded egg-laying vertebrates characterized by feathers and forelimbs modified as wings"
+        firstDefinitions!!.defs.last() shouldBeEqualTo     "v\twatch and study birds in their natural habitat"
+        firstDefHeadwords shouldBeEqualTo DefHeadwords("bird")
+
+        lastWord shouldBeEqualTo Word("twothirds")
+        lastScore shouldBe null
+        lastNumSyllablesCount shouldBeEqualTo SyllablesCount(2)
+        lastTags shouldBe null
+        lastDefinitions shouldBe null
+        lastDefHeadwords shouldBe null
+    }
+
+    private fun bindResponse(wordResponseSet: Set<DatamuseJsonWordResponse>) {
+        firstResponseElement = wordResponseSet.first()
+        lastResponseElement = wordResponseSet.last()
+
+        firstWord = firstResponseElement[Word::class]
+        firstScore = firstResponseElement[Score::class]
+        firstNumSyllablesCount = firstResponseElement[SyllablesCount::class]
+        firstTags = firstResponseElement[Tags::class]
+        firstDefinitions = firstResponseElement[Definitions::class]
+        firstDefHeadwords = firstResponseElement[DefHeadwords::class]
+
+        lastWord = lastResponseElement[Word::class]
+        lastScore = lastResponseElement[Score::class]
+        lastNumSyllablesCount = lastResponseElement[SyllablesCount::class]
+        lastTags = lastResponseElement[Tags::class]
+        lastDefinitions = lastResponseElement[Definitions::class]
+        lastDefHeadwords = lastResponseElement[DefHeadwords::class]
     }
 }
+
