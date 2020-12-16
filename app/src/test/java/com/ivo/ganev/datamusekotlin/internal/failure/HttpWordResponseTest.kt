@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin.internal.exceptions
+package com.ivo.ganev.datamusekotlin.internal.failure
 
 import com.ivo.ganev.datamusekotlin.internal.HttpResponse
 import org.amshove.kluent.shouldBe
@@ -8,7 +8,7 @@ import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
 import kotlin.test.fail
 
-class HttpDatamuseJsonWordResponseTest {
+class HttpWordResponseTest {
     @Test
     fun `is response a result`() {
         val response = HttpResponse.Result("Result")

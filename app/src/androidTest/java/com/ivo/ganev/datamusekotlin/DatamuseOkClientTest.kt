@@ -1,15 +1,16 @@
 package com.ivo.ganev.datamusekotlin
 
-import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClientGet
+import androidx.test.platform.app.InstrumentationRegistry
+import com.ivo.ganev.datamusekotlin.internal.DatamuseOkHttpClient
+import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import com.ivo.ganev.datamusekotlin.internal.HttpClientGet
-import com.ivo.ganev.datamusekotlin.internal.exceptions.RemoteFailure
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
+import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.Before
 import org.junit.Test
 
 /**
@@ -18,11 +19,16 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class DatamuseOkClientTest {
-    private val client: HttpClientGet = DatamuseOkHttpClientGet()
-    private val body = "Test Body"
+    private val client: HttpClientGet = DatamuseOkHttpClient(KotlinJsonWordDecoder())
+    private lateinit var  body: String
+
+    @Before
+    fun setUp() {
+        body = InstrumentationRegistry.getInstrumentation().targetContext.assets.readAssetFile("word-request-simple.json")
+    }
 
     @Test
-    fun `client returns correct server body on successful response code`() = runBlocking() {
+    fun clientReturnsCorrectServerBodyOnSuccessfulResponseCode() = runBlocking() {
         val server = MockWebServer()
         val mockResponse = (MockResponse()
             .setBody(body)
@@ -35,13 +41,12 @@ class DatamuseOkClientTest {
         val get = client.get(serverUrl.toString())
 
         get.isResult shouldBeEqualTo true
-        get.fold({}, { it shouldBeEqualTo body })
 
         server.shutdown()
     }
 
     @Test
-    fun `client returns failure when response code is not successful`() = runBlocking() {
+    fun clientReturnsFailureWhenResponseCodeIsNotSuccessful() = runBlocking() {
         val server = MockWebServer()
         val mockResponse = (MockResponse()
             .setBody(body)

@@ -2,17 +2,16 @@ package com.ivo.ganev.datamusekotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClientGet
+import com.ivo.ganev.datamusekotlin.internal.DatamuseOkHttpClient
+import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val client = DatamuseOkHttpClientGet()
+        val client = DatamuseOkHttpClient(KotlinJsonWordDecoder())
 
         GlobalScope.launch {
             val get = client.get("https://api.datamuse.com/words?sp=hipopatamus")

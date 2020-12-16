@@ -1,7 +1,7 @@
 package com.ivo.ganev.datamusekotlin.internal
 
-import com.ivo.ganev.datamusekotlin.internal.exceptions.RemoteFailure
+import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
 
-interface HttpClientGet {
-   suspend fun get(url: String) : HttpResponse<RemoteFailure, String>
+internal interface HttpClientGet {
+   suspend fun get(url: String) : HttpResponse<RemoteFailure, Set<WordResponse>>
 }

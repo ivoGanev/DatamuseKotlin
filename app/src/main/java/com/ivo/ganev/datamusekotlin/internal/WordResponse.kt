@@ -1,8 +1,7 @@
 package com.ivo.ganev.datamusekotlin.internal
 
 import androidx.annotation.Keep
-import androidx.annotation.StringDef
-import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.internal.WordResponse.Element.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
@@ -17,8 +16,8 @@ import kotlinx.serialization.encoding.decodeStructure
 import kotlin.reflect.KClass
 
 @Keep
-@Serializable(with = ResponseSerializer::class)
-internal class DatamuseJsonWordResponse(private val elements: Set<Element>) {
+@Serializable(with = WordResponseSerializer::class)
+internal class WordResponse(private val elements: Set<Element>) {
 
     val responseSize get() = elements.size
 
@@ -59,7 +58,7 @@ internal class DatamuseJsonWordResponse(private val elements: Set<Element>) {
      *  }
      * ]
      *
-     * Let's say that "response" is a retrieved [DatamuseJsonWordResponse] variable
+     * Let's say that "response" is a retrieved [WordResponse] variable
      * and we want to get the score from the second array element which would be "3".
      * We can do this with the index access operator like: response.elementAt(1)[Score::class],
      * which will give us the single [Element] object in our case [Score] with value of "3".
@@ -70,13 +69,10 @@ internal class DatamuseJsonWordResponse(private val elements: Set<Element>) {
     inline operator fun <reified T : Element> get(element: KClass<T>): T? {
         return elements.find { element.isInstance(it) && element != Element::class } as T?
     }
-
-
 }
 
-
-internal object ResponseSerializer : KSerializer<DatamuseJsonWordResponse> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("DatamuseJsonResponse") {
+internal object WordResponseSerializer : KSerializer<WordResponse> {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("WordResponse") {
         // Each of these elements corresponds to the json response from Datamuse. Their name must
         // match exactly the response key or it won't be considered for deserialization.
         element<String>("word")
@@ -87,7 +83,7 @@ internal object ResponseSerializer : KSerializer<DatamuseJsonWordResponse> {
         element<String>("defHeadword")
     }
 
-    override fun deserialize(decoder: Decoder): DatamuseJsonWordResponse =
+    override fun deserialize(decoder: Decoder): WordResponse =
         decoder.decodeStructure(descriptor) {
             var word: Word? = null
             var score: Score? = null
@@ -121,11 +117,11 @@ internal object ResponseSerializer : KSerializer<DatamuseJsonWordResponse> {
                 }
             }
             val list = setOfNotNull(word, score, definitions, tags, numSyllables, defHeadword)
-            DatamuseJsonWordResponse(list)
+            WordResponse(list)
         }
 
 
-    override fun serialize(encoder: Encoder, value: DatamuseJsonWordResponse) {
+    override fun serialize(encoder: Encoder, value: WordResponse) {
         error("Serialization is not supported.")
     }
 }

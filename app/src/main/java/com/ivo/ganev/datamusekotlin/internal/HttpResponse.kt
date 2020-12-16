@@ -1,7 +1,6 @@
 package com.ivo.ganev.datamusekotlin.internal
 
-import com.ivo.ganev.datamusekotlin.internal.exceptions.RemoteFailure
-import java.lang.Exception
+import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
 
 /**
  * [HttpResponse] returns either a [RemoteFailure] or [Result].

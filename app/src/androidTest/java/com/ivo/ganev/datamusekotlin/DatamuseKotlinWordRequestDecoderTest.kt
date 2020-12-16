@@ -2,15 +2,17 @@ package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
-import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse
-import com.ivo.ganev.datamusekotlin.internal.DatamuseJsonWordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.internal.WordResponse
+import com.ivo.ganev.datamusekotlin.internal.WordResponse.Element.*
 import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
+import kotlinx.serialization.SerializationException
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 
-class DatamuseKotlinWordRequestMapperTest {
+class DatamuseKotlinWordRequestDecoderTest {
     companion object RequestFile {
         const val DEFINITIONS = "word-request-metadata-definitions.json"
         const val SIMPLE = "word-request-simple.json"
@@ -18,8 +20,8 @@ class DatamuseKotlinWordRequestMapperTest {
         const val TAGS = "word-request-tags.json"
     }
 
-    private lateinit var firstResponseElement: DatamuseJsonWordResponse
-    private lateinit var lastResponseElement: DatamuseJsonWordResponse
+    private lateinit var firstResponseElement: WordResponse
+    private lateinit var lastResponseElement: WordResponse
 
     private var firstWord: Word? = null
     private var firstScore: Score? = null
@@ -40,8 +42,19 @@ class DatamuseKotlinWordRequestMapperTest {
     @Before
     fun setUp() {
         wordDecoder = KotlinJsonWordDecoder()
-        firstResponseElement =  DatamuseJsonWordResponse(emptySet())
-        lastResponseElement =  DatamuseJsonWordResponse(emptySet())
+        firstResponseElement =  WordResponse(emptySet())
+        lastResponseElement =  WordResponse(emptySet())
+    }
+
+    @Test
+    fun wordDecoderWithMalformedJsonBodyThrowsException() {
+        try {
+            val wordResponseSet = wordDecoder.decode("malformed url")
+            fail("Didn't throw")
+        }
+        catch (e: SerializationException){
+
+        }
     }
 
     @Test
@@ -109,7 +122,7 @@ class DatamuseKotlinWordRequestMapperTest {
         lastDefHeadwords shouldBe null
     }
 
-    private fun bindResponse(wordResponseSet: Set<DatamuseJsonWordResponse>) {
+    private fun bindResponse(wordResponseSet: Set<WordResponse>) {
         firstResponseElement = wordResponseSet.first()
         lastResponseElement = wordResponseSet.last()
 
