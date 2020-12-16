@@ -1,6 +1,6 @@
-package com.ivo.ganev.datamusekotlin.internal.failure
+package com.ivo.ganev.datamusekotlin.core.failure
 
-import com.ivo.ganev.datamusekotlin.internal.HttpResponse
+import com.ivo.ganev.datamusekotlin.core.HttpResponse
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf

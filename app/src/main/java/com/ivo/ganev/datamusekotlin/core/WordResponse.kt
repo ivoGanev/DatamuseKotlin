@@ -1,7 +1,7 @@
-package com.ivo.ganev.datamusekotlin.internal
+package com.ivo.ganev.datamusekotlin.core
 
 import androidx.annotation.Keep
-import com.ivo.ganev.datamusekotlin.internal.WordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
@@ -17,12 +17,12 @@ import kotlin.reflect.KClass
 
 @Keep
 @Serializable(with = WordResponseSerializer::class)
-internal class WordResponse(private val elements: Set<Element>) {
+class WordResponse(val elements: Set<Element>) {
 
     val responseSize get() = elements.size
 
     @Serializable
-    internal sealed class Element {
+    sealed class Element {
         @Serializable
         data class Word(val word: String) : Element()
 

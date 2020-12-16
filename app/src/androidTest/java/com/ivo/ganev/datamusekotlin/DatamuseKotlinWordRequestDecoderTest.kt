@@ -2,9 +2,9 @@ package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
-import com.ivo.ganev.datamusekotlin.internal.WordResponse
-import com.ivo.ganev.datamusekotlin.internal.WordResponse.Element.*
-import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
+import com.ivo.ganev.datamusekotlin.core.WordResponse
+import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.core.KotlinJsonWordDecoder
 import kotlinx.serialization.SerializationException
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo

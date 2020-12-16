@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin.internal
+package com.ivo.ganev.datamusekotlin.core
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.SetSerializer

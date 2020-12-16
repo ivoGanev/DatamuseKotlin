@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin.internal.failure
+package com.ivo.ganev.datamusekotlin.core.failure
 
 sealed class RemoteFailure {
     data class HttpCodeFailure(val failureCode: Int) : RemoteFailure()

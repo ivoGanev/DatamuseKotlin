@@ -1,6 +1,6 @@
-package com.ivo.ganev.datamusekotlin.internal
+package com.ivo.ganev.datamusekotlin.core
 
-import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
 
 /**
  * [HttpResponse] returns either a [RemoteFailure] or [Result].

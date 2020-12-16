@@ -1,11 +1,10 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.ivo.ganev.datamusekotlin.internal.DatamuseOkHttpClient
+import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClient
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
-import com.ivo.ganev.datamusekotlin.internal.HttpClientGet
-import com.ivo.ganev.datamusekotlin.internal.KotlinJsonWordDecoder
-import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.core.HttpClientGet
+import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -19,7 +18,7 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class DatamuseOkClientTest {
-    private val client: HttpClientGet = DatamuseOkHttpClient(KotlinJsonWordDecoder())
+    private val client: HttpClientGet = DatamuseOkHttpClient()
     private lateinit var  body: String
 
     @Before

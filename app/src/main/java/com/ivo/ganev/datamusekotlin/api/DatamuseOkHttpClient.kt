@@ -1,13 +1,19 @@
-package com.ivo.ganev.datamusekotlin.internal
+package com.ivo.ganev.datamusekotlin.api
 
-import com.ivo.ganev.datamusekotlin.internal.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.core.*
+import com.ivo.ganev.datamusekotlin.core.DatamuseJsonResponseDecoder
+import com.ivo.ganev.datamusekotlin.core.HttpClientGet
+import com.ivo.ganev.datamusekotlin.core.KotlinJsonWordDecoder
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerializationException
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONException
 
-internal class DatamuseOkHttpClient(private val decoder: DatamuseJsonResponseDecoder) : HttpClientGet {
+class DatamuseOkHttpClient() :
+    HttpClientGet {
+    private val decoder: DatamuseJsonResponseDecoder = KotlinJsonWordDecoder()
     private val client: OkHttpClient = OkHttpClient()
 
     override suspend fun get(url: String): HttpResponse<RemoteFailure, Set<WordResponse>> {
