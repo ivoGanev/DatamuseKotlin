@@ -1,6 +1,6 @@
-package com.ivo.ganev.datamusekotlin.core.failure
+package com.ivo.ganev.datamusekotlin.core
 
-import com.ivo.ganev.datamusekotlin.core.HttpResponse
+import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
@@ -26,7 +26,11 @@ class HttpWordResponseTest {
 
     @Test
     fun `test results folding`() {
-        var response: HttpResponse<RemoteFailure, String> = HttpResponse.Failure(RemoteFailure.HttpCodeFailure(300))
+        var response: HttpResponse<RemoteFailure, String> = HttpResponse.Failure(
+            RemoteFailure.HttpCodeFailure(
+                300
+            )
+        )
 
         response.fold({
                       if(it is RemoteFailure.HttpCodeFailure) {
