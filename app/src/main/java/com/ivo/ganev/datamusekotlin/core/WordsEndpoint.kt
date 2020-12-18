@@ -4,16 +4,51 @@ import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.*
 import java.util.*
 import java.util.EnumSet.of
 
-data class WordEndpointUrlConfig(
-    @JvmField val hardConstraint: HardConstraint,
-    @JvmField val topic: Topic,
-    @JvmField val leftContext: LeftContext,
-    @JvmField val rightContext: RightContext,
-    @JvmField val maxResults: MaxResults,
-    @JvmField val metadata: WordsEndpoint.Metadata
+data class WordsEndpointConfig(
+    @JvmField val hardConstraint: HardConstraint? = null,
+    @JvmField val topic: Topic? = null,
+    @JvmField val leftContext: LeftContext? = null,
+    @JvmField val rightContext: RightContext? = null,
+    @JvmField val maxResults: MaxResults? = null,
+    @JvmField val metadata: Metadata? = null
 )
 
+public sealed class WordsEndpointBuilder(private val endpointConfig: WordsEndpointConfig) {
+
+    companion object Default : WordsEndpointBuilder(WordsEndpointConfig())
+
+    private val address: String = "https://api.datamuse.com/words?"
+
+    var hardConstraint = endpointConfig.hardConstraint
+    var topic = endpointConfig.topic
+    var leftContext = endpointConfig.leftContext
+    var rightContext = endpointConfig.rightContext
+    var maxResults = endpointConfig.maxResults
+    var metadata = endpointConfig.metadata
+
+    fun build(): WordsEndpointConfig {
+        // TODO: based on the configuration we need to select and arrange the builder with desired
+        // configuration
+        return WordsEndpointConfig(
+            hardConstraint,
+            topic,
+            leftContext,
+            rightContext,
+            maxResults,
+            metadata
+        )
+    }
+}
+
+public fun wordsEndpoint(
+    from: WordsEndpointBuilder = WordsEndpointBuilder.Default,
+    endpointConfig: WordsEndpointBuilder.() -> Unit
+): String {
+ TODO()
+}
+
 class WordsEndpoint {
+
     interface EndpointKey {
         val key: String
         val value: String
@@ -89,7 +124,7 @@ class WordsEndpoint {
         override val value: String get() = max.toString()
     }
 
-    data class Metadata(val flags:  EnumSet<Flag>) : EndpointKey {
+    data class Metadata(val flags: EnumSet<Flag>) : EndpointKey {
         enum class Flag(val identifier: String) {
             DEFINITIONS("d"),
             PARTS_OF_SPEECH("p"),
@@ -101,8 +136,14 @@ class WordsEndpoint {
         }
 
         override val key: String get() = "md"
-        override val value: String get() = buildString { for (flag in flags) { append(flag.identifier)} }
+        override val value: String
+            get() = buildString {
+                for (flag in flags) {
+                    append(flag.identifier)
+                }
+            }
     }
 }
 
-infix fun EnumSet<Metadata.Flag>.and(other: Metadata.Flag): EnumSet<Metadata.Flag> = of(other, *this.toTypedArray())
+infix fun EnumSet<Metadata.Flag>.and(other: Metadata.Flag): EnumSet<Metadata.Flag> =
+    of(other, *this.toTypedArray())

@@ -13,6 +13,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
+import okhttp3.internal.notify
 import kotlin.reflect.KClass
 
 @Keep
