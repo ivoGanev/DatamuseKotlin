@@ -1,8 +1,13 @@
 package com.ivo.ganev.datamusekotlin.core
 
 import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.*
+import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.HardConstraint.*
 import java.util.*
 import java.util.EnumSet.of
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
+
+typealias MetadataFlag = Metadata.Flag
 
 data class WordsEndpointConfig(
     @JvmField val hardConstraint: HardConstraint? = null,
@@ -13,38 +18,34 @@ data class WordsEndpointConfig(
     @JvmField val metadata: Metadata? = null
 )
 
-public sealed class WordsEndpointBuilder(private val endpointConfig: WordsEndpointConfig) {
-
-    companion object Default : WordsEndpointBuilder(WordsEndpointConfig())
-
+class WordsEndpointBuilder() {
     private val address: String = "https://api.datamuse.com/words?"
 
-    var hardConstraint = endpointConfig.hardConstraint
-    var topic = endpointConfig.topic
-    var leftContext = endpointConfig.leftContext
-    var rightContext = endpointConfig.rightContext
-    var maxResults = endpointConfig.maxResults
-    var metadata = endpointConfig.metadata
+    var word: String = ""
+    var hardConstraint: HardConstraint = MeansLike
+    var topic: String? = null
+    var leftContext: String? = null
+    var rightContext: String? = null
+    var maxResults: Int? = null
+    var metadata: EnumSet<MetadataFlag>? = null
 
     fun build(): WordsEndpointConfig {
-        // TODO: based on the configuration we need to select and arrange the builder with desired
-        // configuration
         return WordsEndpointConfig(
             hardConstraint,
-            topic,
-            leftContext,
-            rightContext,
-            maxResults,
-            metadata
+            topic?.let { Topic(it) },
+            leftContext?.let { LeftContext(it) },
+            rightContext?.let { RightContext(it) },
+            maxResults?.let { MaxResults(it) },
+            metadata?.let { Metadata(it) }
         )
     }
 }
 
-public fun wordsEndpoint(
-    from: WordsEndpointBuilder = WordsEndpointBuilder.Default,
-    endpointConfig: WordsEndpointBuilder.() -> Unit
-): String {
- TODO()
+fun wordsEndpoint(endpointConfig: WordsEndpointBuilder.() -> Unit):
+        WordsEndpointConfig {
+    val builder = WordsEndpointBuilder()
+    builder.endpointConfig()
+    return builder.build()
 }
 
 class WordsEndpoint {
@@ -55,7 +56,9 @@ class WordsEndpoint {
     }
 
     abstract class HardConstraint(open val constraint: String) : EndpointKey {
-        class MeansLike(constraint: String) : HardConstraint(constraint) {
+
+        sealed class MeansLike(constraint: String) : HardConstraint(constraint) {
+            companion object MeansLike : HardConstraint.MeansLike("constraint") // TODO Runtime error when using constraint
             override val key: String get() = "ml"
         }
 
