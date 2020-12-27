@@ -3,8 +3,6 @@ package com.ivo.ganev.datamusekotlin
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClient
 import com.ivo.ganev.datamusekotlin.core.*
-import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.HardConstraint.*
-import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.HardConstraint.RelatedWords.*
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
 import kotlinx.coroutines.runBlocking
@@ -43,7 +41,7 @@ class DatamuseOkClientTest {
        // client.get(hardConstraint, lc, rc, {t1,t2,t3,t4,t5}, max, md)
         get.isResult shouldBeEqualTo true
         val md =
-            WordsEndpoint.Metadata(WordsEndpoint.Metadata.Flag.SYLLABLE_COUNT and WordsEndpoint.Metadata.Flag.PARTS_OF_SPEECH)
+            Metadata(Metadata.Flag.SYLLABLE_COUNT and Metadata.Flag.PARTS_OF_SPEECH)
         println(md.value)
         server.shutdown()
     }

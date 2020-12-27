@@ -1,14 +1,15 @@
 package com.ivo.ganev.datamusekotlin.core
 
-import com.ivo.ganev.datamusekotlin.core.WordsEndpoint.HardConstraint.MeansLike
+
+import com.ivo.ganev.datamusekotlin.core.HardConstraint.*
 import org.junit.Test
 
 class WordsEndpointTest {
     @Test
     fun `test if url comes out correct`() {
-        val b = wordsEndpoint {
-            word = "hello"
-            hardConstraint = MeansLike
+        val b = wordsEndpointUrl {
+      //      word = "hello"
+            hardConstraint = MeansLike("as")
             topic = "meh"
             leftContext = "left"
             rightContext = "right"
