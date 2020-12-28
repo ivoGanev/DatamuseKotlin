@@ -19,7 +19,7 @@ data class WordsEndpointConfig(
 
 class WordsEndpointBuilder {
     var hardConstraint: HardConstraint = MeansLike("")
-    var topic: String? = null
+    var topics: String? = null
     var leftContext: String? = null
     var rightContext: String? = null
     var maxResults: Int? = null
@@ -28,7 +28,7 @@ class WordsEndpointBuilder {
     fun build(): WordsEndpointConfig {
         return WordsEndpointConfig(
             hardConstraint,
-            topic?.let { Topic(it) },
+            topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },
             rightContext?.let { RightContext(it) },
             maxResults?.let { MaxResults(it) },
