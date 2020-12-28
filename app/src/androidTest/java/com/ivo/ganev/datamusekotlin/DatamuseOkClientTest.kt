@@ -1,7 +1,7 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.ivo.ganev.datamusekotlin.api.DatamuseOkHttpClient
+import com.ivo.ganev.datamusekotlin.api.DatamuseClient
 import com.ivo.ganev.datamusekotlin.core.*
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
@@ -18,7 +18,7 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class DatamuseOkClientTest {
-    private val client: HttpClientGet = DatamuseOkHttpClient()
+    private val client: HttpClientGet = DatamuseClient()
     private lateinit var  body: String
 
     @Before
