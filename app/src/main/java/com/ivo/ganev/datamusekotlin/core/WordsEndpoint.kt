@@ -1,6 +1,8 @@
 package com.ivo.ganev.datamusekotlin.core
 
 
+import android.net.Uri
+import com.ivo.ganev.datamusekotlin.core.HardConstraint.*
 import java.util.*
 import java.util.EnumSet.of
 
@@ -16,7 +18,7 @@ data class WordsEndpointConfig(
 )
 
 class WordsEndpointBuilder {
-    var hardConstraint: HardConstraint = HardConstraint.MeansLike("")
+    var hardConstraint: HardConstraint = MeansLike("")
     var topic: String? = null
     var leftContext: String? = null
     var rightContext: String? = null
@@ -35,12 +37,21 @@ class WordsEndpointBuilder {
     }
 }
 
-internal class KeyValueEndpointsUrlStringBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
-    private val address: String = "https://api.datamuse.com/words?"
-    private val path: List<EndpointKeyValue> = endpointKeyValues.filterNotNull()
-    fun build(): String {
-        return address + path.joinToString(separator = "&") { "${it.key}=${it.value}" }
+internal class EndpointsUrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
+    companion object {
+        const val SCHEME = "https"
+        const val AUTHORITY = "api.datamuse.com"
+        const val PATH = "words"
     }
+
+    private val query: List<EndpointKeyValue> = endpointKeyValues.filterNotNull()
+
+    fun build(): String = Uri.Builder().apply {
+        scheme(SCHEME)
+        authority(AUTHORITY)
+        path(PATH)
+        for (element in query) appendQueryParameter(element.key, element.value)
+    }.toString()
 }
 
 fun wordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): String {
@@ -50,10 +61,10 @@ fun wordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): String {
     val path = with(buildConfig) {
         listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
     }
-    return KeyValueEndpointsUrlStringBuilder(path).build()
+    return EndpointsUrlBuilder(path).build()
 }
 
-interface EndpointKeyValue {
+internal interface EndpointKeyValue {
     val key: String
     val value: String
 }
