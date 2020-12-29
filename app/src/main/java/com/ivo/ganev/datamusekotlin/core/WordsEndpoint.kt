@@ -1,99 +1,22 @@
 package com.ivo.ganev.datamusekotlin.core
 
 
-import android.net.Uri
-import com.ivo.ganev.datamusekotlin.core.HardConstraint.*
 import java.util.*
 import java.util.EnumSet.of
 
 typealias MetadataFlag = Metadata.Flag
 
-data class WordsEndpointConfig(
-    @JvmField val hardConstraint: HardConstraint? = null,
-    @JvmField val topic: Topic? = null,
-    @JvmField val leftContext: LeftContext? = null,
-    @JvmField val rightContext: RightContext? = null,
-    @JvmField val maxResults: MaxResults? = null,
-    @JvmField val metadata: Metadata? = null
-)
-
-class WordsEndpointBuilder {
-    /**
-     * See [HardConstraint]
-     * */
-    var hardConstraint: HardConstraint = MeansLike("")
-
-    /**
-     * See: [Topic]
-     * */
-    var topics: String? = null
-
-    /**
-     * See: [LeftContext]
-     * */
-    var leftContext: String? = null
-
-    /**
-     * See: [RightContext]
-     * */
-    var rightContext: String? = null
-
-    /**
-     * See: [MaxResults]
-     * */
-    var maxResults: Int? = null
-
-    /**
-     * See: [Metadata]
-     * */
-    var metadata: EnumSet<MetadataFlag>? = null
-
-    fun build(): WordsEndpointConfig {
-        return WordsEndpointConfig(
-            hardConstraint,
-            topics?.let { Topic(it) },
-            leftContext?.let { LeftContext(it) },
-            rightContext?.let { RightContext(it) },
-            maxResults?.let { MaxResults(it) },
-            metadata?.let { Metadata(it) }
-        )
-    }
-}
-
-internal class EndpointsUrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
-    companion object {
-        const val SCHEME = "https"
-        const val AUTHORITY = "api.datamuse.com"
-        const val PATH = "words"
-    }
-
-    private val query: List<EndpointKeyValue> = endpointKeyValues.filterNotNull()
-
-    fun build(): String = Uri.Builder().apply {
-        scheme(SCHEME)
-        authority(AUTHORITY)
-        path(PATH)
-        for (element in query) appendQueryParameter(element.key, element.value)
-    }.toString()
-}
-
-fun wordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): String {
+fun buildWordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): String {
     val builder = WordsEndpointBuilder()
     builder.endpointConfig()
     val buildConfig = builder.build()
     val path = with(buildConfig) {
         listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
     }
-    return EndpointsUrlBuilder(path).build()
-}
-
-internal interface EndpointKeyValue {
-    val key: String
-    val value: String
+    return WordsEndpointsUrlBuilder(path).build()
 }
 
 sealed class HardConstraint(override val value: String) : EndpointKeyValue {
-
     /**
      * 	Means like constraint: require that the results have a meaning related to this string
      * 	value, which can be any word or sequence of words. (This is effectively the reverse

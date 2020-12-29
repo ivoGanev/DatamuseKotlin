@@ -24,38 +24,38 @@ class WordsEndpointTest {
     @Test
     fun testIfUrlComesOutCorrect() {
         // words with a meaning similar to ringing in the ears
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = MeansLike("ringing in the ears")
         } shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
 
         // words sounding like duck and rice to a maximum of 20
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = SoundsLike("duck and rice")
             maxResults = 20
         } shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
 
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = SpelledLike("men")
             leftContext = "sweet"
         } shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
 
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = RelatedWords(POPULAR_ADJECTIVES ,"sea")
             rightContext = "awake"
             leftContext = "mate"
         } shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
 
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = RelatedWords(ANTONYMS ,"ocean")
             topics = "temperature"
         } shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
 
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = RelatedWords(ANTONYMS ,"girl")
             metadata = METADATA_ALL
         } shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
 
-        wordsEndpointUrl {
+        buildWordsEndpointUrl {
             hardConstraint = RelatedWords(COMPRISES ,"complete test")
             leftContext = "left"
             rightContext = "right"
