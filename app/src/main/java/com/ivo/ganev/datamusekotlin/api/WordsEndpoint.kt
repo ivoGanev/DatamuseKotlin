@@ -1,6 +1,8 @@
-package com.ivo.ganev.datamusekotlin.core
+package com.ivo.ganev.datamusekotlin.api
 
 
+import com.ivo.ganev.datamusekotlin.core.EndpointKeyValue
+import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
 import java.util.*
 import java.util.EnumSet.of
 
@@ -17,6 +19,7 @@ fun buildWordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): Stri
 }
 
 sealed class HardConstraint(override val value: String) : EndpointKeyValue {
+
     /**
      * 	Means like constraint: require that the results have a meaning related to this string
      * 	value, which can be any word or sequence of words. (This is effectively the reverse

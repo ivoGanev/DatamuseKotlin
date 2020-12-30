@@ -1,6 +1,7 @@
 package com.ivo.ganev.datamusekotlin.core
 
 import android.net.Uri
+import com.ivo.ganev.datamusekotlin.api.*
 import java.util.*
 
 internal data class WordsEndpointConfig(
@@ -12,51 +13,8 @@ internal data class WordsEndpointConfig(
     @JvmField val metadata: Metadata? = null
 )
 
-class WordsEndpointBuilder {
-    /**
-     * See [HardConstraint]
-     * */
-    var hardConstraint: HardConstraint = HardConstraint.MeansLike("")
-
-    /**
-     * See: [Topic]
-     * */
-    var topics: String? = null
-
-    /**
-     * See: [LeftContext]
-     * */
-    var leftContext: String? = null
-
-    /**
-     * See: [RightContext]
-     * */
-    var rightContext: String? = null
-
-    /**
-     * See: [MaxResults]
-     * */
-    var maxResults: Int? = null
-
-    /**
-     * See: [Metadata]
-     * */
-    var metadata: EnumSet<MetadataFlag>? = null
-
-    internal fun build(): WordsEndpointConfig {
-        return WordsEndpointConfig(
-            hardConstraint,
-            topics?.let { Topic(it) },
-            leftContext?.let { LeftContext(it) },
-            rightContext?.let { RightContext(it) },
-            maxResults?.let { MaxResults(it) },
-            metadata?.let { Metadata(it) }
-        )
-    }
-}
-
 internal class WordsEndpointsUrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
-    companion object {
+    internal companion object {
         const val SCHEME = "https"
         const val AUTHORITY = "api.datamuse.com"
         const val PATH = "words"

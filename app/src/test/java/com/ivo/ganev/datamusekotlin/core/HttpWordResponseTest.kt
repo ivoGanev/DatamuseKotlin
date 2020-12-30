@@ -1,6 +1,7 @@
 package com.ivo.ganev.datamusekotlin.core
 
-import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.api.HttpResponse
+import com.ivo.ganev.datamusekotlin.api.RemoteFailure
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf

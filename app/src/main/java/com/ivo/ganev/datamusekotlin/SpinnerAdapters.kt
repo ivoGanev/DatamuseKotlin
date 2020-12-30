@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
-import com.ivo.ganev.datamusekotlin.core.HardConstraint
 
 class SpinnerAdapterHardConstraint(
     private val context: Context,

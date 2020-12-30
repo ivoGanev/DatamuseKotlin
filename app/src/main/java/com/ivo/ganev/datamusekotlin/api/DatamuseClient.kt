@@ -1,6 +1,5 @@
 package com.ivo.ganev.datamusekotlin.api
 
-import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
 import com.ivo.ganev.datamusekotlin.core.*
 import com.ivo.ganev.datamusekotlin.core.DatamuseJsonResponseDecoder
 import com.ivo.ganev.datamusekotlin.core.HttpClientGet

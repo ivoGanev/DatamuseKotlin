@@ -4,7 +4,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.ivo.ganev.datamusekotlin.api.DatamuseClient
 import com.ivo.ganev.datamusekotlin.core.*
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
-import com.ivo.ganev.datamusekotlin.core.failure.RemoteFailure
+import com.ivo.ganev.datamusekotlin.api.RemoteFailure
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
