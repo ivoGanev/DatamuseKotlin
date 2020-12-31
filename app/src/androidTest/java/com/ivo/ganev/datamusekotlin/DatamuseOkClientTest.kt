@@ -11,6 +11,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
+import com.ivo.ganev.datamusekotlin.api.Metadata as ApiMetadata
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -38,10 +39,10 @@ class DatamuseOkClientTest {
 
         val serverUrl = server.url("/v1/fetch/")
         val get = client.get(serverUrl.toString())
-       // client.get(hardConstraint, lc, rc, {t1,t2,t3,t4,t5}, max, md)
+
         get.isResult shouldBeEqualTo true
         val md =
-            Metadata(Metadata.Flag.SYLLABLE_COUNT and Metadata.Flag.PARTS_OF_SPEECH)
+            ApiMetadata(ApiMetadata.Flag.SYLLABLE_COUNT and ApiMetadata.Flag.PARTS_OF_SPEECH)
         println(md.value)
         server.shutdown()
     }

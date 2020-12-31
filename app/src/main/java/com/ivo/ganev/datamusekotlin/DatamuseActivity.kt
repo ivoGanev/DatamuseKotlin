@@ -1,14 +1,15 @@
 package com.ivo.ganev.datamusekotlin
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.View
-import android.widget.AdapterView
 import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.UiConstraintElement.*
 import com.ivo.ganev.datamusekotlin.api.HardConstraint
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code.APPROXIMATE_RHYMES
+import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.Word
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId
@@ -33,10 +34,19 @@ class DatamuseActivity : AppCompatActivity(),
         setContentView(binding.root)
 
         spinnerAdapter = SpinnerAdapterHardConstraint(this, constraints)
+        binding.tvResponse.movementMethod = ScrollingMovementMethod()
         binding.constraintSpinner.adapter = spinnerAdapter
         apiData = ApiData(binding)
 
-        viewModel.result.observe(this, { it.forEach { wordResponse -> println(wordResponse.elements) } })
+        viewModel.result.observe(this, {
+            var i = 1
+            binding.tvResponse.text = ""
+
+            it.forEach { wordResponse ->
+                val word = wordResponse[Word::class]?.word
+                binding.tvResponse.append("$i. $word \n")
+                i++
+            } })
     }
 
     override fun onClick(v: View?) {

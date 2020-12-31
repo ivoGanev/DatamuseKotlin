@@ -7,58 +7,185 @@
     tools:context=".DatamuseActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_response_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Datamuse Response:"
         app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/et_lc"
+        app:layout_constraintVertical_bias="0.057" />
 
     <Button
-        android:onClick="onClick"
         android:id="@+id/btn_fetch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="onClick"
         android:text="Fetch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tv_response"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:scrollbarSize="10dp"
+        android:scrollbars="vertical"
         android:text="Click Fetch button to generate a response"
+        app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_response_label"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
         android:id="@+id/constraint_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:hint="Type search word"
+    <Spinner
+        android:id="@+id/constraint_rel_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
         android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraint_spinner" />
+
+    <EditText
         android:id="@+id/et_word"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Type search word"
+        android:inputType="textPersonName"
+        android:text="donkey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraint_rel_spinner" />
+
+    <CheckBox
+        android:id="@+id/cb_definitions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="definitions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
+
+    <CheckBox
+        android:id="@+id/cb_parts_of_speech"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="parts of speech"
+        app:layout_constraintStart_toEndOf="@+id/cb_definitions"
+        app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
+
+    <CheckBox
+        android:id="@+id/cb_syllable_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="syllable count"
+        app:layout_constraintStart_toEndOf="@+id/cb_parts_of_speech"
+        app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
+
+    <CheckBox
+        android:id="@+id/cb_pronunciation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pronunciation"
+        app:layout_constraintStart_toStartOf="@+id/cb_definitions"
+        app:layout_constraintTop_toBottomOf="@+id/cb_definitions" />
+
+    <CheckBox
+        android:id="@+id/cb_pronunciation2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pronunciation"
+        app:layout_constraintStart_toStartOf="@+id/cb_definitions"
+        app:layout_constraintTop_toBottomOf="@+id/cb_definitions" />
+
+    <CheckBox
+        android:id="@+id/cb_word_frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="word frequency"
+        app:layout_constraintStart_toEndOf="@+id/cb_pronunciation"
+        app:layout_constraintTop_toBottomOf="@+id/cb_definitions" />
+
+    <TextView
+        android:id="@+id/tv_metadata_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Metadata"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_word" />
+
+    <EditText
+        android:hint="right context"
+        android:id="@+id/et_rc"
+        android:layout_width="141dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_lc"
+        app:layout_constraintTop_toTopOf="@+id/et_lc" />
+
+    <EditText
+        android:id="@+id/et_max_results"
+        android:layout_width="102dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="max results"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/et_lc"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_lc" />
+
+    <EditText
+        android:hint="left context"
+        android:id="@+id/et_lc"
+        android:layout_width="141dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/et_rc"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_max_results"
+        app:layout_constraintTop_toBottomOf="@+id/et_topics" />
+
+    <EditText
+        android:hint="topics"
+        android:id="@+id/et_topics"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_word_frequency" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

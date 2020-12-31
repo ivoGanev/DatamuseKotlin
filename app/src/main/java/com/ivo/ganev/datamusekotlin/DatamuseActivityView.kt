@@ -9,8 +9,9 @@ import com.ivo.ganev.datamusekotlin.core.WordsEndpointConfig
 import java.util.*
 
 abstract class DatamuseActivityData()  {
-    private val client = DatamuseClient()
-
+    /**
+     *
+     * */
     abstract fun getConstraint(): HardConstraint
 
     protected open fun getTopics(): String? {
