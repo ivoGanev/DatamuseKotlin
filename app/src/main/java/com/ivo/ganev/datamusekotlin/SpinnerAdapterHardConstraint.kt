@@ -11,8 +11,8 @@ import android.widget.SpinnerAdapter
 import android.widget.TextView
 
 class SpinnerAdapterHardConstraint(
-    private val context: Context,
-    private val hardConstraint: List<String>
+    context: Context,
+    private val hardConstraint: List<UiConstraintElement>
 ) :
     BaseAdapter(), SpinnerAdapter {
 
@@ -33,7 +33,7 @@ class SpinnerAdapterHardConstraint(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: layoutInflater.inflate(R.layout.spinner_item,parent,false)
         val text = view.findViewById<TextView>(R.id.tv_spinner_item)
-        text?.text = hardConstraint[position]
+        text?.text = hardConstraint[position].label
         return view
     }
 

@@ -3,70 +3,59 @@ package com.ivo.ganev.datamusekotlin
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Spinner
 import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.UiConstraintElement.*
+import com.ivo.ganev.datamusekotlin.api.HardConstraint
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code.APPROXIMATE_RHYMES
 
-import com.ivo.ganev.datamusekotlin.databinding.ActivityTestBinding
+import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId
+import com.ivo.ganev.datamusekotlin.extenstions.string
 
 
-class DatamuseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
+class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener {
-    private lateinit var binding: ActivityTestBinding
+    private lateinit var binding: DatamuseDemoActivityBinding
     private lateinit var spinnerAdapter: SpinnerAdapter
-    private lateinit var spinner: Spinner
-    private val viewModelDatamuse: DatamuseActivityViewModel by viewModels()
+    private lateinit var apiData: ApiData
 
-    private val spinnerConstraintList = listOf(
+    private val viewModel: DatamuseActivityViewModel by viewModels()
+
+    private val constraints = listOf(
         MeansLikeElement, SoundsLikeElement, SpelledLikeElement, RelatedWordsElement
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTestBinding.inflate(layoutInflater)
+        binding = DatamuseDemoActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val constraintNames = spinnerConstraintList.map { it.label }
-        spinnerAdapter = SpinnerAdapterHardConstraint(this, constraintNames)
-        spinner = binding.spinnerHardConstraint
+        spinnerAdapter = SpinnerAdapterHardConstraint(this, constraints)
+        binding.constraintSpinner.adapter = spinnerAdapter
+        apiData = ApiData(binding)
 
-        binding.spinnerHardConstraint.adapter = spinnerAdapter
-        binding.spinnerHardConstraint.onItemSelectedListener = this
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val constraintInUISpinner = spinnerConstraintList[position]
-        val keyword = binding.etWord.text.toString()
-
-        val constraint = when (constraintInUISpinner) {
-            is RelatedWordsElement -> constraintInUISpinner.create(APPROXIMATE_RHYMES, keyword)
-            else -> constraintInUISpinner.create(keyword)
-        }
-        println(constraint.toString() + "::"  + constraint.key + "::" + constraint.value)
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
+        viewModel.result.observe(this, { it.forEach { wordResponse -> println(wordResponse.elements) } })
     }
 
     override fun onClick(v: View?) {
         if (v isWithId R.id.btn_fetch) {
-            //   viewModelDatamuse.makeNetworkRequest()
-            println("Fetching..")
+            viewModel.makeNetworkRequest(apiData.toUrlString())
         }
     }
 
-    private fun getViewData(): DatamuseActivityView {
-        return DatamuseActivityView(
-            binding.spinnerHardConstraint.selectedItem as String,
-            binding.etWord.text.toString()
-        )
-    }
+    class ApiData(private val binding: DatamuseDemoActivityBinding) : DatamuseActivityData() {
+        override fun getConstraint(): HardConstraint {
+            val constraintElement = binding.constraintSpinner.selectedItem as UiConstraintElement
+            val keyword = binding.etWord.string()
 
+            return when (constraintElement) {
+                is RelatedWordsElement -> constraintElement.create(APPROXIMATE_RHYMES, keyword)
+                else -> constraintElement.create(keyword)
+            }
+        }
+    }
 }
 
 

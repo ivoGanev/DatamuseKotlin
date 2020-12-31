@@ -6,7 +6,6 @@ import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
 
 /**
  * A class representing a single element of type [HardConstraint] with a label. Usage:
- *
  * Put object elements inside a list like:
  *```
  * val labeledConstraint = listof(RelatedWordsElement, SoundsLikeElement..)

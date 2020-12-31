@@ -6,32 +6,32 @@ import java.util.*
 
 class WordsEndpointBuilder {
     /**
-     * See [HardConstraint]
+     * @see [HardConstraint]
      * */
     var hardConstraint: HardConstraint = HardConstraint.MeansLike("")
 
     /**
-     * See: [Topic]
+     * @see [Topic]
      * */
     var topics: String? = null
 
     /**
-     * See: [LeftContext]
+     * @see  [LeftContext]
      * */
     var leftContext: String? = null
 
     /**
-     * See: [RightContext]
+     * @see  [RightContext]
      * */
     var rightContext: String? = null
 
     /**
-     * See: [MaxResults]
+     * @see  [MaxResults]
      * */
     var maxResults: Int? = null
 
     /**
-     * See: [Metadata]
+     * @see  [Metadata]
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 

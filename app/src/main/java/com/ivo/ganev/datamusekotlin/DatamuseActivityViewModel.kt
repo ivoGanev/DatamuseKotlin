@@ -5,44 +5,30 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ivo.ganev.datamusekotlin.api.DatamuseClient
+import com.ivo.ganev.datamusekotlin.api.HttpResponse
 import com.ivo.ganev.datamusekotlin.api.RemoteFailure
 import com.ivo.ganev.datamusekotlin.api.buildWordsEndpointUrl
+import com.ivo.ganev.datamusekotlin.core.WordResponse
 import kotlinx.coroutines.launch
 
 class DatamuseActivityViewModel : ViewModel() {
-    private val _datamuseActivityData: MutableLiveData<DatamuseActivityView> = MutableLiveData()
-    val datamuseActivityData: LiveData<DatamuseActivityView> = _datamuseActivityData
-
-    private val _remoteFailure: MutableLiveData<RemoteFailure> = MutableLiveData()
-    val remoteFailure: LiveData<RemoteFailure> = _remoteFailure
-
-    private fun handleFailure(remoteFailure: RemoteFailure) {
-        _remoteFailure.value = remoteFailure
-    }
-
-    fun handleActivityData(data: DatamuseActivityView) {
-        _datamuseActivityData.value = DatamuseActivityView(data.constraint, data.word)
-    }
-
     private val client = DatamuseClient()
 
-    fun makeNetworkRequest(data: DatamuseActivityView) {
+    val failure: MutableLiveData<RemoteFailure> by lazy {
+        MutableLiveData<RemoteFailure>()
+    }
+
+    val result: MutableLiveData<Set<WordResponse>> by lazy {
+        MutableLiveData<Set<WordResponse>>()
+    }
+
+    fun makeNetworkRequest(url: String) {
         viewModelScope.launch {
-            val get = client.get("URL->TODO")
-            get.fold({ remoteFailure ->
-                when (remoteFailure) {
-                    is RemoteFailure.HttpCodeFailure -> println(remoteFailure.failureCode)
-                    is RemoteFailure.MalformedJsonBodyFailure -> println(remoteFailure.message)
-                }
-            }, {
-                it.forEach { wordResponse -> println(wordResponse.elements) }
-            })
+            val get = client.get(url)
+            get.fold(
+                { remoteFailure -> failure.postValue(remoteFailure) },
+                { result.postValue(it) })
         }
     }
 
-    private fun buildUrlStringFromView(data: DatamuseActivityView): String {
-        return buildWordsEndpointUrl {
-
-        }
-    }
 }
