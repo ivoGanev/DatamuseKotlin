@@ -3,10 +3,12 @@ package com.ivo.ganev.datamusekotlin
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.ivo.ganev.datamusekotlin.UiConstraintElement.*
+import com.ivo.ganev.datamusekotlin.ConstraintElement.*
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
@@ -14,10 +16,10 @@ import com.ivo.ganev.datamusekotlin.extenstions.isWithId
 
 
 class DatamuseActivity : AppCompatActivity(),
-    View.OnClickListener {
+    View.OnClickListener, AdapterView.OnItemSelectedListener {
     private lateinit var binding: DatamuseDemoActivityBinding
-    private lateinit var spinnerAdapter: SpinnerAdapter
-    private lateinit var datamuseBindingBuilderBinder: DemoModelToUrlBuilderBuilderBinder
+    private lateinit var constraintAdapter: SpinnerAdapter
+    private lateinit var datamuseBindingFuseWordsEndpoints: DemoModelWordsEndpointsUrlBinder
 
     private val viewModel: DatamuseActivityViewModel by viewModels()
 
@@ -30,10 +32,12 @@ class DatamuseActivity : AppCompatActivity(),
         binding = DatamuseDemoActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        spinnerAdapter = SpinnerAdapterHardConstraint(this, constraints)
+        constraintAdapter = HardConstraintAdapter(this, constraints)
+        binding.constraintSpinner.onItemSelectedListener = this
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
-        binding.constraintSpinner.adapter = spinnerAdapter
-        datamuseBindingBuilderBinder = DemoModelToUrlBuilderBuilderBinder(binding)
+        binding.constraintSpinner.adapter = constraintAdapter
+        binding.constraintRelSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
+        datamuseBindingFuseWordsEndpoints = DemoModelWordsEndpointsUrlBinder(binding)
 
         viewModel.result.observe(this, {
             var i = 1
@@ -47,8 +51,8 @@ class DatamuseActivity : AppCompatActivity(),
                 val syllablesCount = wordResponse[SyllablesCount::class]?.numSyllables
                 val defHeadwords = wordResponse[DefHeadwords::class]?.defHeadword
 
-                binding.tvResponse.append("$i. $word , Score: $score, Definitions: $definitions, " +
-                        "Tags: $tags, Syllable Count: $syllablesCount, Def Headwords: $defHeadwords\n")
+                binding.tvResponse.append("$i. $word\n Score: $score\n Definitions: $definitions\n " +
+                        "Tags: $tags\n Syllable Count: $syllablesCount\n Def Headwords: $defHeadwords\n\n")
                 i++
             } })
 
@@ -59,8 +63,23 @@ class DatamuseActivity : AppCompatActivity(),
 
     override fun onClick(v: View?) {
         if (v isWithId R.id.btn_fetch) {
-            viewModel.makeNetworkRequest(datamuseBindingBuilderBinder.toUrlString())
+            val url = datamuseBindingFuseWordsEndpoints.toUrlString()
+            binding.tvUrl.text = url
+            viewModel.makeNetworkRequest(url)
         }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if(parent isWithId R.id.constraint_spinner) {
+            if(constraints[position] == RelatedWordsElement)
+                binding.constraintRelSpinner.visibility = View.VISIBLE
+            else
+                binding.constraintRelSpinner.visibility = View.GONE
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
     }
 
 }

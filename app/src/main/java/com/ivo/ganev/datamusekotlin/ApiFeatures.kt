@@ -19,34 +19,47 @@ import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
  * println(constraint.toString() + " :: "  + constraint.key + " :: " + constraint.value)
  * ```
  * */
-sealed class UiConstraintElement(val label: String) {
+sealed class ConstraintElement(val label: String) {
     abstract fun create(word: String): HardConstraint
 
-    object MeansLikeElement : UiConstraintElement("Means Like") {
-        override fun create(word: String): HardConstraint.MeansLike {
-            return MeansLike(word)
-        }
+    object MeansLikeElement : ConstraintElement("Means Like") {
+        override fun create(word: String): MeansLike = MeansLike(word)
     }
 
-    object SoundsLikeElement : UiConstraintElement("Sounds Like") {
-        override fun create(word: String): HardConstraint.SoundsLike {
-            return SoundsLike(word)
-        }
+    object SoundsLikeElement : ConstraintElement("Sounds Like") {
+        override fun create(word: String): SoundsLike = SoundsLike(word)
     }
 
-    object SpelledLikeElement : UiConstraintElement("Spelled Like") {
-        override fun create(word: String): HardConstraint.SpelledLike {
-            return SpelledLike(word)
-        }
+    object SpelledLikeElement : ConstraintElement("Spelled Like") {
+        override fun create(word: String): SpelledLike = SpelledLike(word)
     }
 
-    object RelatedWordsElement : UiConstraintElement("Related Words") {
-        override fun create(word: String): HardConstraint {
-            return create(code = Code.APPROXIMATE_RHYMES, word)
-        }
+    object RelatedWordsElement : ConstraintElement("Related Words") {
+        val codeMap = mapOf(
+            "Approximate Rhymes" to Code.APPROXIMATE_RHYMES,
+            "Antonyms" to Code.ANTONYMS,
+            "Comprises" to Code.COMPRISES,
+            "Consonant Match" to Code.CONSONANT_MATCH,
+            "Frequent Followers" to Code.FREQUENT_FOLLOWERS,
+            "Frequent Predecessors" to Code.FREQUENT_PREDECESSORS,
+            "Homophobes" to Code.HOMOPHONES,
+            "Kind of" to Code.KIND_OF,
+            "More General Than" to Code.MORE_GENERAL_THAN,
+            "Part of" to Code.PART_OF,
+            "Popular Adjectives" to Code.POPULAR_ADJECTIVES,
+            "Popular Nouns" to Code.POPULAR_NOUNS,
+            "Rhymes" to Code.RHYMES,
+            "Synonyms" to Code.SYNONYMS,
+            "Triggers" to Code.TRIGGERS,
+        )
 
-        fun create(code: Code, word: String): HardConstraint.RelatedWords {
-            return RelatedWords(code, word)
-        }
+        override fun create(word: String): HardConstraint = create(code = Code.APPROXIMATE_RHYMES, word)
+
+        fun create(code: Code, word: String): RelatedWords = RelatedWords(code, word)
     }
 }
+
+
+//sealed class RelatedWordsCodeElement(val label: String) {
+//
+//}

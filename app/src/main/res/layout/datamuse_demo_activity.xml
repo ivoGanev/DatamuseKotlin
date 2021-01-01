@@ -12,11 +12,29 @@
         android:layout_height="wrap_content"
         android:text="Datamuse Response:"
         app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_lc"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_url"
+        app:layout_constraintVertical_bias="0.034" />
+
+    <TextView
+        android:id="@+id/tv_url_query_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Url:"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_url"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_lc" />
+
+    <TextView
+        android:id="@+id/tv_url"
+        android:layout_width="372dp"
+        android:layout_height="51dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_url_query_label"
+        app:layout_constraintTop_toBottomOf="@+id/et_lc" />
 
     <Button
         android:id="@+id/btn_fetch"
@@ -24,10 +42,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:onClick="onClick"
-        android:text="Fetch"
+        android:text="Query"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -39,7 +57,7 @@
         android:layout_marginEnd="16dp"
         android:scrollbarSize="10dp"
         android:scrollbars="vertical"
-        android:text="Click Fetch button to generate a response"
+        android:text="Tap query to get a Datamuse JSON response"
         app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +101,7 @@
     <CheckBox
         android:id="@+id/cb_definitions"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/checkbox_height"
         android:text="definitions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
@@ -91,7 +109,7 @@
     <CheckBox
         android:id="@+id/cb_parts_of_speech"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/checkbox_height"
         android:text="parts of speech"
         app:layout_constraintStart_toEndOf="@+id/cb_definitions"
         app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
@@ -99,7 +117,7 @@
     <CheckBox
         android:id="@+id/cb_syllable_count"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/checkbox_height"
         android:text="syllable count"
         app:layout_constraintStart_toEndOf="@+id/cb_parts_of_speech"
         app:layout_constraintTop_toBottomOf="@+id/tv_metadata_label" />
@@ -107,7 +125,7 @@
     <CheckBox
         android:id="@+id/cb_pronunciation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/checkbox_height"
         android:text="pronunciation"
         app:layout_constraintStart_toStartOf="@+id/cb_definitions"
         app:layout_constraintTop_toBottomOf="@+id/cb_definitions" />
@@ -115,7 +133,7 @@
     <CheckBox
         android:id="@+id/cb_word_frequency"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/checkbox_height"
         android:text="word frequency"
         app:layout_constraintStart_toEndOf="@+id/cb_pronunciation"
         app:layout_constraintTop_toBottomOf="@+id/cb_definitions" />
@@ -130,11 +148,11 @@
         app:layout_constraintTop_toBottomOf="@+id/et_word" />
 
     <EditText
-        android:hint="right context"
         android:id="@+id/et_rc"
         android:layout_width="141dp"
         android:layout_height="40dp"
         android:ems="10"
+        android:hint="right context"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -142,7 +160,6 @@
         app:layout_constraintTop_toTopOf="@+id/et_lc" />
 
     <EditText
-        android:text="100"
         android:id="@+id/et_max_results"
         android:layout_width="102dp"
         android:layout_height="40dp"
@@ -150,18 +167,19 @@
         android:ems="10"
         android:hint="max results"
         android:inputType="number"
+        android:text="100"
         app:layout_constraintEnd_toStartOf="@+id/et_lc"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/et_lc" />
 
     <EditText
-        android:hint="left context"
         android:id="@+id/et_lc"
         android:layout_width="141dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
         android:ems="10"
+        android:hint="left context"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/et_rc"
         app:layout_constraintHorizontal_bias="0.5"
@@ -169,12 +187,12 @@
         app:layout_constraintTop_toBottomOf="@+id/et_topics" />
 
     <EditText
-        android:hint="topics"
         android:id="@+id/et_topics"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="topics"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

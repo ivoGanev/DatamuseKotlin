@@ -1,18 +1,16 @@
 package com.ivo.ganev.datamusekotlin
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
 
-class SpinnerAdapterHardConstraint(
+class HardConstraintAdapter(
     context: Context,
-    private val hardConstraint: List<UiConstraintElement>
+    private val hardConstraint: List<ConstraintElement>
 ) :
     BaseAdapter(), SpinnerAdapter {
 

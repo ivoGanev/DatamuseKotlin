@@ -2,17 +2,28 @@ package com.ivo.ganev.datamusekotlin.api
 
 
 import com.ivo.ganev.datamusekotlin.core.EndpointKeyValue
+import com.ivo.ganev.datamusekotlin.core.UnspecifiedHardConstraintException
 import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
 import java.util.*
 import java.util.EnumSet.of
 
 typealias MetadataFlag = Metadata.Flag
 
+/**
+ * Builds the URL address for the Datamuse API. In order to be able to build a URL you need to
+ * provide at least a hard constraint.
+ * 
+ * @throws UnspecifiedHardConstraintException - when no hard constraint is specified
+ * */
 fun buildWordsEndpointUrl(endpointConfig: WordsEndpointBuilder.() -> Unit): String {
     val builder = WordsEndpointBuilder()
     builder.endpointConfig()
     val buildConfig = builder.build()
     val path = with(buildConfig) {
+        if(hardConstraint==null)
+            throw UnspecifiedHardConstraintException(
+                "You need to provide a hard constraint in order to build a URL for the API"
+            )
         listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
     }
     return WordsEndpointsUrlBuilder(path).build()
