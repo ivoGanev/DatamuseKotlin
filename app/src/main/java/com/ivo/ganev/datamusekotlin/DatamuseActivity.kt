@@ -9,6 +9,8 @@ import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.ConstraintElement.*
+import com.ivo.ganev.datamusekotlin.api.format
+import com.ivo.ganev.datamusekotlin.api.string
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
@@ -46,15 +48,30 @@ class DatamuseActivity : AppCompatActivity(),
             it.forEach { wordResponse ->
                 val word = wordResponse[Word::class]?.word
                 val score = wordResponse[Score::class]?.score
-                val definitions  = wordResponse[Definitions::class]?.defs
+                val definitions = wordResponse[Definitions::class]?.format()?.string()
                 val tags = wordResponse[Tags::class]?.tags
                 val syllablesCount = wordResponse[SyllablesCount::class]?.numSyllables
                 val defHeadwords = wordResponse[DefHeadwords::class]?.defHeadword
 
-                binding.tvResponse.append("$i. $word\n Score: $score\n Definitions: $definitions\n " +
-                        "Tags: $tags\n Syllable Count: $syllablesCount\n Def Headwords: $defHeadwords\n\n")
+                val jsonFormattedOutput = buildString {
+                    append("$i. $word\n")
+                    if (score != null)
+                        append("Score: $score\n")
+                    if (definitions != null)
+                        append("Definitions: $definitions")
+                    if (tags != null)
+                        append("Tags: $tags\n")
+                    if (syllablesCount != null)
+                        append("Syllable Count: $syllablesCount\n")
+                    if (defHeadwords!=null)
+                        append("Def Headwords: $defHeadwords")
+                    append("\n\n")
+                }
+
+                binding.tvResponse.append(jsonFormattedOutput)
                 i++
-            } })
+            }
+        })
 
         viewModel.failure.observe(this, {
             binding.tvResponse.text = it.toString()
@@ -70,8 +87,8 @@ class DatamuseActivity : AppCompatActivity(),
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if(parent isWithId R.id.constraint_spinner) {
-            if(constraints[position] == RelatedWordsElement)
+        if (parent isWithId R.id.constraint_spinner) {
+            if (constraints[position] == RelatedWordsElement)
                 binding.constraintRelSpinner.visibility = View.VISIBLE
             else
                 binding.constraintRelSpinner.visibility = View.GONE

@@ -58,8 +58,3 @@ sealed class ConstraintElement(val label: String) {
         fun create(code: Code, word: String): RelatedWords = RelatedWords(code, word)
     }
 }
-
-
-//sealed class RelatedWordsCodeElement(val label: String) {
-//
-//}

@@ -5,12 +5,10 @@ import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 
+
 @Keep
 @Serializable(with = WordResponseSerializer::class)
 class WordResponse(val elements: Set<Element>) {
-
-    val responseSize get() = elements.size
-
     @Serializable
     sealed class Element {
         @Serializable

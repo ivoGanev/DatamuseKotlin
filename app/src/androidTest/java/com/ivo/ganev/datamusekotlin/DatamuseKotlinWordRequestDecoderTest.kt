@@ -1,6 +1,7 @@
 package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import com.ivo.ganev.datamusekotlin.core.WordResponse
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
@@ -120,6 +121,8 @@ class DatamuseKotlinWordRequestDecoderTest {
         lastTags shouldBe null
         lastDefinitions shouldBe null
         lastDefHeadwords shouldBe null
+
+        firstDefinitions!!.format()
     }
 
     private fun bindResponse(wordResponseSet: Set<WordResponse>) {

@@ -28,11 +28,9 @@ class WordsEndpointTest {
 
     @Test
     fun testIfUrlComesOutCorrect() {
-        // test if no hard constraint is provided
+        // test for a hard constraint
         try {
-            buildWordsEndpointUrl {
-
-            }
+            buildWordsEndpointUrl{}
             fail()
         }
         catch (e: UnspecifiedHardConstraintException) {}
