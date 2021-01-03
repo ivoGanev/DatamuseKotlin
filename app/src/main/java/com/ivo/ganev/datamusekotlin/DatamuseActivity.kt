@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.ConstraintElement.*
 import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.api.string
+import com.ivo.ganev.datamusekotlin.api.toWordsEndpointUrl
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
@@ -21,7 +22,7 @@ class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener, AdapterView.OnItemSelectedListener {
     private lateinit var binding: DatamuseDemoActivityBinding
     private lateinit var constraintAdapter: SpinnerAdapter
-    private lateinit var datamuseBindingFuseWordsEndpoints: DemoModelWordsEndpointsUrlBinder
+    private lateinit var modelUrlBuilder: ModelUrlBuilder
 
     private val viewModel: DatamuseActivityViewModel by viewModels()
 
@@ -39,7 +40,7 @@ class DatamuseActivity : AppCompatActivity(),
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
         binding.constraintSpinner.adapter = constraintAdapter
         binding.constraintRelSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
-        datamuseBindingFuseWordsEndpoints = DemoModelWordsEndpointsUrlBinder(binding)
+        modelUrlBuilder = ModelUrlBuilder(binding)
 
         viewModel.result.observe(this, {
             var i = 1
@@ -80,9 +81,9 @@ class DatamuseActivity : AppCompatActivity(),
 
     override fun onClick(v: View?) {
         if (v isWithId R.id.btn_fetch) {
-            val url = datamuseBindingFuseWordsEndpoints.toUrlString()
-            binding.tvUrl.text = url
-            viewModel.makeNetworkRequest(url)
+            val config = modelUrlBuilder.build()
+            binding.tvUrl.text = toWordsEndpointUrl(config)
+            viewModel.makeNetworkRequest(modelUrlBuilder.build())
         }
     }
 
@@ -98,7 +99,6 @@ class DatamuseActivity : AppCompatActivity(),
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
-
 }
 
 

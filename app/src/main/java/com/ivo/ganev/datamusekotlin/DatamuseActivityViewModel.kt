@@ -1,13 +1,9 @@
 package com.ivo.ganev.datamusekotlin
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivo.ganev.datamusekotlin.api.DatamuseClient
-import com.ivo.ganev.datamusekotlin.api.HttpResponse
-import com.ivo.ganev.datamusekotlin.api.RemoteFailure
-import com.ivo.ganev.datamusekotlin.api.buildWordsEndpointUrl
+import com.ivo.ganev.datamusekotlin.api.*
 import com.ivo.ganev.datamusekotlin.core.WordResponse
 import kotlinx.coroutines.launch
 
@@ -22,10 +18,10 @@ class DatamuseActivityViewModel : ViewModel() {
         MutableLiveData<Set<WordResponse>>()
     }
 
-    fun makeNetworkRequest(url: String) {
+    fun makeNetworkRequest(config: WordsEndpointConfigBuilder) {
         viewModelScope.launch {
-            val get = client.get(url)
-            get.fold(
+            val get = client.query(config)
+            get.applyEither(
                 { remoteFailure -> failure.postValue(remoteFailure) },
                 { result.postValue(it) })
         }

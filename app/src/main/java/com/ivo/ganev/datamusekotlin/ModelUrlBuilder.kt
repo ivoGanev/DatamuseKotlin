@@ -10,12 +10,13 @@ import com.ivo.ganev.datamusekotlin.extenstions.string
 import java.util.*
 
 /**
- * This class is an example of how you can directly bind your UI data to the Datamuse URL builder.
- * Although it is not a requirement to use the Datamuse Kotlin Library with it, it shows one way
- * of working with the library
+ * This class is an example of how you can build a URL for a Datamuse query by directly
+ * binding your UI data from the activity to the lambda builder method. Here we use the
+ * activity binding to override all the methods although getConstraint() is the only
+ * necessary one.
  * */
-class DemoModelWordsEndpointsUrlBinder(private val binding: DatamuseDemoActivityBinding) :
-    ModelWordsEndpointsUrlBinder() {
+class ModelUrlBuilder(private val binding: DatamuseDemoActivityBinding) :
+    ModelUrlBuilderBase() {
 
     /**
      * Each checkbox from the activity corresponds to a MetadataFlag
@@ -28,7 +29,7 @@ class DemoModelWordsEndpointsUrlBinder(private val binding: DatamuseDemoActivity
         binding.cbWordFrequency to MetadataFlag.WORD_FREQUENCY
     )
 
-    override fun getConstraint(): HardConstraint {
+    override fun constraint(): HardConstraint {
         val spinnerConstraint = binding.constraintSpinner.selectedItem as ConstraintElement
         val spinnerCode = binding.constraintRelSpinner.selectedItem as String
         val code = RelatedWordsElement.codeMap[spinnerCode] ?: Code.APPROXIMATE_RHYMES
@@ -40,24 +41,26 @@ class DemoModelWordsEndpointsUrlBinder(private val binding: DatamuseDemoActivity
         }
     }
 
-    override fun getTopics(): String {
+    override fun topics(): String {
         return binding.etTopics.string()
     }
 
-    override fun getLeftContext(): String {
+    override fun leftContext(): String {
         return binding.etLc.string()
     }
 
-    override fun getRightContext(): String {
+    override fun rightContext(): String {
         return binding.etRc.string()
     }
 
-    override fun getMaxResults(): Int {
+    override fun maxResults(): Int {
         return Integer.parseInt(binding.etMaxResults.string())
     }
 
-    override fun getMetadata(): EnumSet<MetadataFlag> {
+    override fun metadata(): EnumSet<MetadataFlag> {
+        // filter all checkboxes and extract the MetadataFlags's
         val flags = metadataCheckbox.filter { it.key.isChecked }.values
+
         val set = EnumSet.noneOf(MetadataFlag::class.java)
         set.addAll(flags)
         return set

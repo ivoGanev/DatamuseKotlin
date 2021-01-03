@@ -1,11 +1,11 @@
 package com.ivo.ganev.datamusekotlin.api
 
 /**
- * [HttpResponse] returns either a [RemoteFailure] or [Result].
+ * [QueryResponse] returns either a [RemoteFailure] or [Result].
  * */
-sealed class HttpResponse<out F : RemoteFailure, out R> {
-    data class Failure<out F : RemoteFailure>(val failure: F) : HttpResponse<F, Nothing>()
-    data class Result<out R>(val result: R) : HttpResponse<Nothing, R>()
+sealed class QueryResponse<out F : RemoteFailure, out R> {
+    data class Failure<out F : RemoteFailure>(val failure: F) : QueryResponse<F, Nothing>()
+    data class Result<out R>(val result: R) : QueryResponse<Nothing, R>()
 
     /**
      * Creates a Failure
@@ -23,7 +23,7 @@ sealed class HttpResponse<out F : RemoteFailure, out R> {
     /**
      * Applies fnF if this is a Failure and fnR if this is a Result.
      * */
-    fun fold(fnF: (F) -> Any, fnR: (R) -> Any): Any =
+    fun applyEither(fnF: (F) -> Any, fnR: (R) -> Any): Any =
         when (this) {
             is Failure -> fnF(failure)
             is Result -> fnR(result)
