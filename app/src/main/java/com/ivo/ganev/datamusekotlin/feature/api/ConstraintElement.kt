@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature.api
 
 import com.ivo.ganev.datamusekotlin.api.HardConstraint
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.*

@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
+import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement
+import com.ivo.ganev.datamusekotlin.R
 
 class HardConstraintAdapter(
     context: Context,

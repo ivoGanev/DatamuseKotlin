@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -8,13 +8,14 @@ import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.ivo.ganev.datamusekotlin.ConstraintElement.*
-import com.ivo.ganev.datamusekotlin.api.WordsEndpointConfigBuilder
+import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.*
+import com.ivo.ganev.datamusekotlin.feature.adapter.HardConstraintAdapter
+import com.ivo.ganev.datamusekotlin.feature.api.UrlModel
+import com.ivo.ganev.datamusekotlin.R
 import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.api.buildToString
 import com.ivo.ganev.datamusekotlin.api.toUrl
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
-import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId
@@ -24,7 +25,7 @@ class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener, AdapterView.OnItemSelectedListener {
     private lateinit var binding: DatamuseDemoActivityBinding
     private lateinit var constraintAdapter: SpinnerAdapter
-    private lateinit var modelUrlBuilder: ModelUrlBuilder
+    private lateinit var modelUrlBuilder: UrlModel
 
     private val viewModel: DatamuseActivityViewModel by viewModels()
 
@@ -42,7 +43,7 @@ class DatamuseActivity : AppCompatActivity(),
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
         binding.constraintSpinner.adapter = constraintAdapter
         binding.constraintRelSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
-        modelUrlBuilder = ModelUrlBuilder(binding)
+        modelUrlBuilder = UrlModel(binding)
 
         viewModel.result.observe(this, {
             var i = 1

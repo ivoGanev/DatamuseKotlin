@@ -34,6 +34,9 @@ fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
     return result.toString()
 }
 
+/**
+ *
+ * */
 fun Definitions.format() : List<Pair<SpeechPart?, String>> {
     val result = mutableListOf<Pair<SpeechPart?, String>>()
 

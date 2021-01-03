@@ -1,7 +1,7 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature.api
 
-import com.ivo.ganev.datamusekotlin.ConstraintElement.RelatedWordsElement
-import com.ivo.ganev.datamusekotlin.ConstraintElement.RelatedWordsElement.create
+import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.RelatedWordsElement
+import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.RelatedWordsElement.create
 import com.ivo.ganev.datamusekotlin.api.HardConstraint
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
 import com.ivo.ganev.datamusekotlin.api.MetadataFlag
@@ -15,8 +15,8 @@ import java.util.*
  * activity binding to override all the methods although getConstraint() is the only
  * necessary one.
  * */
-class ModelUrlBuilder(private val binding: DatamuseDemoActivityBinding) :
-    ModelUrlBuilderBase() {
+class UrlModel(private val binding: DatamuseDemoActivityBinding) :
+    UrlModelBase() {
 
     /**
      * Each checkbox from the activity corresponds to a MetadataFlag

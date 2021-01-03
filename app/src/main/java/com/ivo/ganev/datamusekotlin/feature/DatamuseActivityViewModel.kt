@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,5 +26,4 @@ class DatamuseActivityViewModel : ViewModel() {
                 { result.postValue(it) })
         }
     }
-
 }

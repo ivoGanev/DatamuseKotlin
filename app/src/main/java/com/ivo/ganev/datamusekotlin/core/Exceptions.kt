@@ -1,5 +1,6 @@
 package com.ivo.ganev.datamusekotlin.core
 
-import java.lang.RuntimeException
-
+/**
+ * Thrown when a hard constraint has not been specified
+ * */
 class UnspecifiedHardConstraintException(message: String?) : Exception(message)

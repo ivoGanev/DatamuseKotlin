@@ -1,4 +1,4 @@
-package com.ivo.ganev.datamusekotlin
+package com.ivo.ganev.datamusekotlin.feature.api
 
 import com.ivo.ganev.datamusekotlin.api.*
 import java.util.*
@@ -6,10 +6,10 @@ import java.util.*
 /**
  * You can use this class as a medium between your input data from the application views
  * and the generation of the URL address for Datamuse. By inheriting from it you can directly
- * bind the data from the UI to the URL builder. See [ModelUrlBuilder]
+ * bind the data from the UI to the URL builder. See [UrlModel]
  * for a concrete implementation example.
  * */
-abstract class ModelUrlBuilderBase() {
+abstract class UrlModelBase() {
 
     /**
      * All Datamuse /words endpoint queries require a single hard constraint
