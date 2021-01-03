@@ -1,5 +1,8 @@
 package com.ivo.ganev.datamusekotlin.core
 
+import com.ivo.ganev.datamusekotlin.api.ConfigurationBuilder
+import com.ivo.ganev.datamusekotlin.api.ConfigurationToStringConverter
+
 inline fun <K, V> Map<out K, V>.filterFirst(predicate: (V) -> Boolean): Pair<K, V>? {
     for (entry in this) {
         if (predicate(entry.value)) {
@@ -8,3 +11,5 @@ inline fun <K, V> Map<out K, V>.filterFirst(predicate: (V) -> Boolean): Pair<K, 
     }
     return null
 }
+
+fun ConfigurationBuilder.toUrl(): String = ConfigurationToStringConverter.Default.from(this.build())

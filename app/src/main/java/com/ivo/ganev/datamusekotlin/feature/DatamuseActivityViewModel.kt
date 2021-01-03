@@ -18,7 +18,7 @@ class DatamuseActivityViewModel : ViewModel() {
         MutableLiveData<Set<WordResponse>>()
     }
 
-    fun makeNetworkRequest(config: WordsEndpointConfigBuilder) {
+    fun makeNetworkRequest(config: ConfigurationBuilder) {
         viewModelScope.launch {
             val get = client.query(config)
             get.applyEither(

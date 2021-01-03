@@ -14,22 +14,34 @@ import org.json.JSONException
  * Datamuse Client's purpose is to make queries to it's endpoints and retrieve
  * the results in a [QueryResponse]
  * */
-class DatamuseClient(private val configuredUrlString: ConfiguredUrlString) : Client {
-    constructor() : this(configuredUrlString = WordsEndpointConfigBuilder.UrlString)
+class DatamuseClient(private val configurationToStringConverter: ConfigurationToStringConverter) : Client {
+    constructor() : this(configurationToStringConverter = ConfigurationToStringConverter.Default)
 
     private val decoder: DatamuseJsonResponseDecoder = KotlinJsonWordDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
     /**
-     * Calling this method will retrieve a single JSON query from Datamuse
+     * Calling this method will retrieve a single JSON query from Datamuse.
      * */
-    override suspend fun query(config: WordsEndpointConfigBuilder):
-            QueryResponse<RemoteFailure, Set<WordResponse>> = getResponseAsync(config).await()
+    override suspend fun query(config: ConfigurationBuilder):
+            QueryResponse<RemoteFailure, Set<WordResponse>> =
+        queryAsync(makeUrl(config)).await()
 
-    private fun getResponseAsync(config: WordsEndpointConfigBuilder) =
+    /**
+     * Creates a Url with the help of the [ConfigurationToStringConverter]
+     * This step is a way to make the client possible to test with a fake URL
+     * configuration.
+     * */
+    private fun makeUrl(config: ConfigurationBuilder) : String =
+        configurationToStringConverter.from(config.build())
+
+    /**
+     * Will query the Datamuse API asynchronously
+     * */
+    private fun queryAsync(url: String) =
         GlobalScope.async(Dispatchers.IO) {
             val request: Request = Request.Builder()
-                .url(configuredUrlString.from(config))
+                .url(url)
                 .build()
 
             httpClient.newCall(request).execute().use {

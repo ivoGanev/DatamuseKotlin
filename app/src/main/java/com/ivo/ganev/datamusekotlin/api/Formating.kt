@@ -25,6 +25,15 @@ enum class SpeechPart(val label: String) {
     VERB("Verb")
 }
 
+/**
+ * A method to display the Pair like:
+ *
+ * (Noun), "whatever the definition of the word is"
+ *
+ * (Verb), "second definition of the word"
+ *
+ * and so on
+ * */
 fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
     val result = StringBuilder()
     for (element in this) {
@@ -35,7 +44,23 @@ fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
 }
 
 /**
- *
+ * When querying for definitions they come out in a quite unhandy format looking like:
+ * ```
+ * {
+ * "word": "curds",
+ * "defs": [
+ *      "n\tcoagulated milk; used to made cheese",
+ *      "n\ta coagulated liquid resembling milk curd"
+ * ],}
+ * ```
+ * Notice the "n\t.." in the beginning of the definition indicates the part of speech for the word
+ * in this case a noun for both definitions. This method extracts the part of speech
+ * as [SpeechPart] and removes the unnecessary noise from the definition leaving it
+ * looking like:
+ *```
+ *  "coagulated milk; used to made cheese",
+ *  "coagulated liquid resembling milk curd"
+ *  ```
  * */
 fun Definitions.format() : List<Pair<SpeechPart?, String>> {
     val result = mutableListOf<Pair<SpeechPart?, String>>()

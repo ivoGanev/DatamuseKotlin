@@ -66,7 +66,7 @@ abstract class UrlModelBase() {
         else metadata()
     }
 
-    fun build(): WordsEndpointConfigBuilder {
+    fun build(): ConfigurationBuilder {
         return buildWordsEndpointUrl {
             hardConstraint = constraint()
             topics = topicsNullable()

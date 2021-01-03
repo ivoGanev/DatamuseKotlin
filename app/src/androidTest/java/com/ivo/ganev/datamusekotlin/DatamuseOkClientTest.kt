@@ -5,14 +5,15 @@ import com.ivo.ganev.datamusekotlin.api.*
 import com.ivo.ganev.datamusekotlin.core.*
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import kotlinx.coroutines.runBlocking
+import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
 
-class ConfigureUrlStringStub(private val url: String) : ConfiguredUrlString {
-    override fun from(config: WordsEndpointConfigBuilder): String {
+class ConfigureUrlToStringConverterStub(private val url: String) : ConfigurationToStringConverter() {
+    override fun from(config: Configuration): String {
         return url
     }
 }
@@ -43,7 +44,7 @@ class DatamuseOkClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client: Client = DatamuseClient(ConfigureUrlStringStub(url.toString()))
+        val client: Client = DatamuseClient(ConfigureUrlToStringConverterStub(url.toString()))
         val get = client.query(configBuilderFake)
 
         get.isResult shouldBeEqualTo true
@@ -61,7 +62,7 @@ class DatamuseOkClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client: Client = DatamuseClient(ConfigureUrlStringStub(url.toString()))
+        val client: Client = DatamuseClient(ConfigureUrlToStringConverterStub(url.toString()))
         val get = client.query(configBuilderFake)
 
         get.isFailure shouldBeEqualTo true

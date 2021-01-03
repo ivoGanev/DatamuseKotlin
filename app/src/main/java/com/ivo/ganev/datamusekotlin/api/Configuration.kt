@@ -1,10 +1,10 @@
-package com.ivo.ganev.datamusekotlin.core
+package com.ivo.ganev.datamusekotlin.api
 
 import android.net.Uri
 import com.ivo.ganev.datamusekotlin.api.*
 import java.util.*
 
-internal data class WordsEndpointConfig(
+data class Configuration(
     @JvmField val hardConstraint: HardConstraint? = null,
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,

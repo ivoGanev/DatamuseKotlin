@@ -1,29 +1,11 @@
 package com.ivo.ganev.datamusekotlin.api
 
-import com.ivo.ganev.datamusekotlin.core.WordsEndpointConfig
-import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
-import com.ivo.ganev.datamusekotlin.core.toWordEndpointKeyValue
 import java.util.*
 
-
-
-interface ConfiguredUrlString {
-    /**
-     * Will create a Url string from [WordsEndpointConfigBuilder] configuration
-     * */
-    fun from(config: WordsEndpointConfigBuilder) : String
-}
-
 /**
- * This is a builder designed specifically for library clients.
+ * This is a builder designed specifically for library clients. It will
  * */
-class WordsEndpointConfigBuilder {
-    object UrlString: ConfiguredUrlString {
-       override fun from(config: WordsEndpointConfigBuilder) : String {
-            val endpointKeyValue = toWordEndpointKeyValue(config.build())
-            return WordsEndpointsUrlBuilder(endpointKeyValue).build()
-        }
-    }
+class ConfigurationBuilder {
     /**
      * A query element for the hard constraints.
      * @see [HardConstraint]
@@ -59,8 +41,8 @@ class WordsEndpointConfigBuilder {
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 
-    internal fun build(): WordsEndpointConfig {
-        return WordsEndpointConfig(
+    internal fun build(): Configuration {
+        return Configuration(
             hardConstraint,
             topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },

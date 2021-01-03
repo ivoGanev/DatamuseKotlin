@@ -21,7 +21,7 @@ sealed class QueryResponse<out F : RemoteFailure, out R> {
     val isResult get() = this is Result<R>
 
     /**
-     * Applies fnF if this is a Failure and fnR if this is a Result.
+     * Applies fnF if this is a Failure or fnR if this is a Result.
      * */
     fun applyEither(fnF: (F) -> Any, fnR: (R) -> Any): Any =
         when (this) {
