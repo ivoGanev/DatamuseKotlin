@@ -9,10 +9,11 @@ import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamusekotlin.ConstraintElement.*
+import com.ivo.ganev.datamusekotlin.api.WordsEndpointConfigBuilder
 import com.ivo.ganev.datamusekotlin.api.format
-import com.ivo.ganev.datamusekotlin.api.string
-import com.ivo.ganev.datamusekotlin.api.toWordsEndpointUrl
+import com.ivo.ganev.datamusekotlin.api.buildToString
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId
@@ -49,7 +50,7 @@ class DatamuseActivity : AppCompatActivity(),
             it.forEach { wordResponse ->
                 val word = wordResponse[Word::class]?.word
                 val score = wordResponse[Score::class]?.score
-                val definitions = wordResponse[Definitions::class]?.format()?.string()
+                val definitions = wordResponse[Definitions::class]?.format()?.buildToString()
                 val tags = wordResponse[Tags::class]?.tags
                 val syllablesCount = wordResponse[SyllablesCount::class]?.numSyllables
                 val defHeadwords = wordResponse[DefHeadwords::class]?.defHeadword
@@ -82,7 +83,7 @@ class DatamuseActivity : AppCompatActivity(),
     override fun onClick(v: View?) {
         if (v isWithId R.id.btn_fetch) {
             val config = modelUrlBuilder.build()
-            binding.tvUrl.text = toWordsEndpointUrl(config)
+            binding.tvUrl.text = WordsEndpointConfigBuilder.UrlString.from(config)
             viewModel.makeNetworkRequest(modelUrlBuilder.build())
         }
     }

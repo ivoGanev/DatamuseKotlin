@@ -14,7 +14,9 @@ import org.json.JSONException
  * Datamuse Client's purpose is to make queries to it's endpoints and retrieve
  * the results in a [QueryResponse]
  * */
-class DatamuseClient : Client {
+class DatamuseClient(private val configuredUrlString: ConfiguredUrlString) : Client {
+    constructor() : this(configuredUrlString = WordsEndpointConfigBuilder.UrlString)
+
     private val decoder: DatamuseJsonResponseDecoder = KotlinJsonWordDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
@@ -27,7 +29,7 @@ class DatamuseClient : Client {
     private fun getResponseAsync(config: WordsEndpointConfigBuilder) =
         GlobalScope.async(Dispatchers.IO) {
             val request: Request = Request.Builder()
-                .url(toWordsEndpointUrl(config))
+                .url(configuredUrlString.from(config))
                 .build()
 
             // I have to decouple the Config to Endpoints builder in order to test this shit
