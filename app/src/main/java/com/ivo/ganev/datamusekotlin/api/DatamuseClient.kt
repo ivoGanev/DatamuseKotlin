@@ -32,8 +32,6 @@ class DatamuseClient(private val configuredUrlString: ConfiguredUrlString) : Cli
                 .url(configuredUrlString.from(config))
                 .build()
 
-            // I have to decouple the Config to Endpoints builder in order to test this shit
-
             httpClient.newCall(request).execute().use {
                 if (!it.isSuccessful)
                     return@async QueryResponse.Failure(RemoteFailure.HttpCodeFailure(it.code))

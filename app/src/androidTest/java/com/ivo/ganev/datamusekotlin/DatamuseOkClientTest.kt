@@ -23,7 +23,7 @@ class ConfigureUrlStringStub(private val url: String) : ConfiguredUrlString {
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class DatamuseOkClientTest {
-    private val configBuilderFake = buildWordsEndpointUrl { }
+    private val configBuilderFake = buildWordsEndpointUrl { hardConstraint = HardConstraint.MeansLike("") }
 
     private lateinit var body: String
 

@@ -22,14 +22,10 @@ internal class WordsEndpointsUrlBuilder(endpointKeyValues: List<EndpointKeyValue
 /**
  * Creates a list of [EndpointKeyValue] from [WordsEndpointConfig]
  *
- * @throws UnspecifiedHardConstraintException - Providing a hard constraint is
  * absolutely necessary to create a URL for the API query.
  * */
 internal fun toWordEndpointKeyValue(buildConfig: WordsEndpointConfig):
         List<EndpointKeyValue?> = with(buildConfig) {
-    if (hardConstraint == null)
-        throw UnspecifiedHardConstraintException(
-            "You need to provide a hard constraint in order to build a URL for the API"
-        )
     listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
 }
+

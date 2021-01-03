@@ -1,6 +1,7 @@
 package com.ivo.ganev.datamusekotlin.api
 
 
+import com.ivo.ganev.datamusekotlin.api.WordsEndpointConfigBuilder.UrlString
 import com.ivo.ganev.datamusekotlin.core.EndpointKeyValue
 import com.ivo.ganev.datamusekotlin.core.UnspecifiedHardConstraintException
 import com.ivo.ganev.datamusekotlin.core.WordsEndpointConfig
@@ -20,8 +21,14 @@ fun buildWordsEndpointUrl(wordsConfig: WordsEndpointConfigBuilder.() -> Unit):
         WordsEndpointConfigBuilder {
     val builder = WordsEndpointConfigBuilder()
     builder.wordsConfig()
+    if (builder.hardConstraint == null)
+        throw UnspecifiedHardConstraintException(
+            "You need to provide a hard constraint in order to build a URL for the API"
+        )
     return builder
 }
+
+fun WordsEndpointConfigBuilder.toUrl(): String = UrlString.from(this)
 
 sealed class HardConstraint(override val value: String) : EndpointKeyValue {
 

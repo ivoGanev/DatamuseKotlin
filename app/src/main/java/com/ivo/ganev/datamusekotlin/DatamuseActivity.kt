@@ -12,6 +12,7 @@ import com.ivo.ganev.datamusekotlin.ConstraintElement.*
 import com.ivo.ganev.datamusekotlin.api.WordsEndpointConfigBuilder
 import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.api.buildToString
+import com.ivo.ganev.datamusekotlin.api.toUrl
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
 import com.ivo.ganev.datamusekotlin.core.WordsEndpointsUrlBuilder
 
@@ -83,7 +84,7 @@ class DatamuseActivity : AppCompatActivity(),
     override fun onClick(v: View?) {
         if (v isWithId R.id.btn_fetch) {
             val config = modelUrlBuilder.build()
-            binding.tvUrl.text = WordsEndpointConfigBuilder.UrlString.from(config)
+            binding.tvUrl.text = config.toUrl()
             viewModel.makeNetworkRequest(modelUrlBuilder.build())
         }
     }

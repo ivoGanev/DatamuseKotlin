@@ -2,11 +2,8 @@ package com.ivo.ganev.datamusekotlin.core
 
 
 import android.os.Build
-import com.ivo.ganev.datamusekotlin.api.HardConstraint
+import com.ivo.ganev.datamusekotlin.api.*
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code.*
-import com.ivo.ganev.datamusekotlin.api.MetadataFlag
-import com.ivo.ganev.datamusekotlin.api.and
-import com.ivo.ganev.datamusekotlin.api.buildWordsEndpointUrl
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
@@ -30,42 +27,42 @@ class WordsEndpointTest {
     fun testIfUrlComesOutCorrect() {
         // test for a hard constraint
         try {
-            buildWordsEndpointUrl{}
+            buildWordsEndpointUrl {}
             fail()
+        } catch (e: UnspecifiedHardConstraintException) {
         }
-        catch (e: UnspecifiedHardConstraintException) {}
 
         // words with a meaning similar to ringing in the ears
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.MeansLike("ringing in the ears")
-        } shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
 
         // words sounding like duck and rice to a maximum of 20
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.SoundsLike("duck and rice")
             maxResults = 20
-        } shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.SpelledLike("men")
             leftContext = "sweet"
-        } shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(POPULAR_ADJECTIVES, "sea")
             rightContext = "awake"
             leftContext = "mate"
-        } shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "ocean")
             topics = "temperature"
-        } shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "girl")
             metadata = METADATA_ALL
-        } shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(COMPRISES, "complete test")
@@ -74,6 +71,6 @@ class WordsEndpointTest {
             topics = "topic"
             maxResults = 101
             metadata = METADATA_B
-        } shouldBeEqualTo ENDPOINTS_URL + "rel_com=complete%20test&topics=topic&lc=left&rc=right&max=101&md=dp"
+        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_com=complete%20test&topics=topic&lc=left&rc=right&max=101&md=dp"
     }
 }
