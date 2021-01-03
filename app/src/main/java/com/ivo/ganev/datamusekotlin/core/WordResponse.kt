@@ -34,6 +34,7 @@ class WordResponse(val elements: Set<Element>) {
      * *  Retrieves a single element from the element set: [elements]
      * @param element is a KClass of type [Element] like [Score]. Example "Score::class"
      *
+     * ```
      * Example: Let's look at the JSON response:
      * [
      *  {
@@ -45,11 +46,14 @@ class WordResponse(val elements: Set<Element>) {
      *      "score": 3
      *  }
      * ]
+     *```
      *
-     * Let's say that "response" is a retrieved [WordResponse] variable
-     * and we want to get the score from the second array element which would be "3".
-     * We can do this with the index access operator like: response.elementAt(1)[Score::class],
-     * which will give us the single [Element] object in our case [Score] with value of "3".
+     * In order to retrieve the [Word] element all you need to do is call:
+     *
+     * myWordResponse[Word::class]?.word
+     *
+     * Elements are nullable for the reason that not every json response
+     * will carry all of them.
      *
      * @returns [Element] if the set contains it and null when there is
      * no element of the provided type.

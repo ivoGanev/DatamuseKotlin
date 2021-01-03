@@ -44,6 +44,16 @@ fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
 }
 
 /**
+ * This method extracts the part of speech
+ * as [SpeechPart] and removes the unnecessary noise from the definition leaving it
+ * looking like:
+ *```
+ *  "coagulated milk; used to made cheese",
+ *  "coagulated liquid resembling milk curd"
+ *  ```
+ *
+ * Why format?
+ *
  * When querying for definitions they come out in a quite unhandy format looking like:
  * ```
  * {
@@ -54,13 +64,8 @@ fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
  * ],}
  * ```
  * Notice the "n\t.." in the beginning of the definition indicates the part of speech for the word
- * in this case a noun for both definitions. This method extracts the part of speech
- * as [SpeechPart] and removes the unnecessary noise from the definition leaving it
- * looking like:
- *```
- *  "coagulated milk; used to made cheese",
- *  "coagulated liquid resembling milk curd"
- *  ```
+ * in this case a noun for both definitions. In case you would like to eliminate that, you could use
+ * this method.
  * */
 fun Definitions.format() : List<Pair<SpeechPart?, String>> {
     val result = mutableListOf<Pair<SpeechPart?, String>>()

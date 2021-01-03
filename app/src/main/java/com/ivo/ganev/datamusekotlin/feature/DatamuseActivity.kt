@@ -14,8 +14,8 @@ import com.ivo.ganev.datamusekotlin.feature.api.UrlModel
 import com.ivo.ganev.datamusekotlin.R
 import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.api.buildToString
-import com.ivo.ganev.datamusekotlin.api.toUrl
 import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.core.toUrl
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId

@@ -5,19 +5,15 @@ import com.ivo.ganev.datamusekotlin.api.HardConstraint.*
 import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
 
 /**
- * A class representing a single element of type [HardConstraint] with a label. Usage:
- * Put object elements inside a list like:
- *```
- * val labeledConstraint = listof(RelatedWordsElement, SoundsLikeElement..)
- *```
- * and use them to quickly create a [HardConstraint] like:
- *```
- * val constraint = when (labeledConstraint[0]) {
- * is RelatedWordsElement -> labeledConstraint[0].create(APPROXIMATE_RHYMES, keyword)
- * else -> labeledConstraint[0].create(keyword)
- * }
- * println(constraint.toString() + " :: "  + constraint.key + " :: " + constraint.value)
- * ```
+ * A class representing a single element of type [HardConstraint] with a label.
+ * This is not part of the Datamuse library.
+ *
+ * What is it used for?
+ *
+ * Each [ConstraintElement] has a label which the Spinner uses to
+ * display in the Activity. A list of [ConstraintElement]'s can be put inside
+ * a spinner adapter and whenever necessary to create a [HardConstraint]
+ * from it.
  * */
 sealed class ConstraintElement(val label: String) {
     abstract fun create(word: String): HardConstraint

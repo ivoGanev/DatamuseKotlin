@@ -3,7 +3,10 @@ package com.ivo.ganev.datamusekotlin.core
 import android.net.Uri
 import com.ivo.ganev.datamusekotlin.api.Configuration
 
-internal class UrlProducer(endpointKeyValues: List<EndpointKeyValue?>) {
+/**
+ * Builds a URL String from the list of [EndpointKeyValue]
+ * */
+internal class UrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
     internal companion object {
         const val SCHEME = "https"
         const val AUTHORITY = "api.datamuse.com"

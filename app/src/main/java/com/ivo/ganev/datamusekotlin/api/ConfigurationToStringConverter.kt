@@ -1,7 +1,7 @@
 package com.ivo.ganev.datamusekotlin.api
 
 import com.ivo.ganev.datamusekotlin.core.EndpointKeyValue
-import com.ivo.ganev.datamusekotlin.core.UrlProducer
+import com.ivo.ganev.datamusekotlin.core.UrlBuilder
 
 /**
  * Converts the [Configuration] into any type of String.
@@ -26,7 +26,7 @@ abstract class ConfigurationToStringConverter {
     object Default : ConfigurationToStringConverter() {
         override fun from(config: Configuration): String {
             val endpointKeyValue = toWordEndpointKeyValue(config)
-            return UrlProducer(endpointKeyValue).build()
+            return UrlBuilder(endpointKeyValue).build()
         }
 
         /**
