@@ -2,7 +2,6 @@ package com.ivo.ganev.datamusekotlin.core
 
 
 
-import com.ivo.ganev.datamusekotlin.common.toUrl
 import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint.RelatedWords.Code.*
 import com.ivo.ganev.datamusekotlin.endpoint.words.and
 import com.ivo.ganev.datamusekotlin.configuration.buildWordsEndpointUrl

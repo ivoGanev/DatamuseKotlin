@@ -30,7 +30,6 @@ import com.ivo.ganev.datamusekotlin.R
 import com.ivo.ganev.datamusekotlin.common.buildToString
 import com.ivo.ganev.datamusekotlin.common.format
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse.Element.*
-import com.ivo.ganev.datamusekotlin.common.toUrl
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.isWithId

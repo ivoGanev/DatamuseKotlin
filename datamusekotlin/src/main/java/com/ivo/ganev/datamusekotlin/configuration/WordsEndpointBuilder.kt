@@ -16,27 +16,16 @@
 package com.ivo.ganev.datamusekotlin.configuration
 
 import com.ivo.ganev.datamusekotlin.client.UrlConvertible
-import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
 import com.ivo.ganev.datamusekotlin.endpoint.words.*
 import com.ivo.ganev.datamusekotlin.exceptions.UnspecifiedHardConstraintException
 import java.util.*
 
-/**
- * A [ConfigurationBuilder] is used to create a [WordsEndpointConfig]
- * which is made of [EndpointKeyValue]'s. It's basically an easy
- * way to map user defined primitive-type options to [EndpointKeyValue]'s.
- * */
-interface ConfigurationBuilder {
-    fun build(): WordsEndpointConfig
-}
 
 /**
  * The [WordsEndpointBuilder] will build [WordsEndpointConfig] for the
  * words/ endpoint. Usage: [buildWordsEndpointUrl]
  * */
-class WordsEndpointBuilder() : ConfigurationBuilder, UrlConvertible {
-
-
+class WordsEndpointBuilder() : UrlConvertible {
     /**
      * Set this to provide a hard constraint
      * @see [HardConstraint]
@@ -44,35 +33,36 @@ class WordsEndpointBuilder() : ConfigurationBuilder, UrlConvertible {
     var hardConstraint: HardConstraint? = null
 
     /**
-     * A query element for the topics
+     * Set this to add topics to the query
      * @see [Topic]
      * */
     var topics: String? = null
 
     /**
-     * A query element for the left context
+     * Set this to add left context to the query
      * @see  [LeftContext]
      * */
     var leftContext: String? = null
 
     /**
-     * A query element for the right context
+     * Set this to add right context to the query
      * @see  [RightContext]
      * */
     var rightContext: String? = null
 
     /**
-     * A query element for the max results
+     * Set this to set the maximum results for the query
      * @see  [MaxResults]
      * */
     var maxResults: Int? = null
 
     /**
+     * Set this to add metadata flags to the query
      * @see  [Metadata]
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 
-    override fun build(): WordsEndpointConfig {
+     fun build(): WordsEndpointConfig {
         return WordsEndpointConfig(
             hardConstraint,
             topics?.let { Topic(it) },
@@ -83,7 +73,7 @@ class WordsEndpointBuilder() : ConfigurationBuilder, UrlConvertible {
         )
     }
 
-    override fun toUrl(): String = ConfigurationToURLConverter.Default.from(this.build())
+    override fun toUrl(): String = ConfigurationConverter.toWordsEndpoint(this.build())
 }
 
 /**

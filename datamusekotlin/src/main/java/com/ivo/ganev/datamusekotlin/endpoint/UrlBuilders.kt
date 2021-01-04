@@ -20,11 +20,10 @@ import okhttp3.HttpUrl
 /**
  * Builds a URL String from the list of [EndpointKeyValue]
  * */
-internal class UrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
+internal class DatamuseUrlBuilder(endpointKeyValues: List<EndpointKeyValue?>, private val path: String) {
     internal companion object {
         const val SCHEME = "https"
         const val AUTHORITY = "api.datamuse.com"
-        const val PATH = "words"
     }
 
     private val query: List<EndpointKeyValue> = endpointKeyValues.filterNotNull()
@@ -32,7 +31,7 @@ internal class UrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
     fun build(): String = HttpUrl.Builder().apply {
         scheme(SCHEME)
         host(AUTHORITY)
-        addPathSegment(PATH)
+        addPathSegment(path)
         for (element in query) addQueryParameter(element.key, element.value)
     }.build().toString()
 }

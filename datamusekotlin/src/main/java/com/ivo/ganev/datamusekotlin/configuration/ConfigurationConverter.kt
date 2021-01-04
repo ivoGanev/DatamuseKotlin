@@ -16,29 +16,28 @@
 package com.ivo.ganev.datamusekotlin.configuration
 
 import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
-import com.ivo.ganev.datamusekotlin.endpoint.UrlBuilder
+import com.ivo.ganev.datamusekotlin.endpoint.DatamuseUrlBuilder
 
 /**
- * Converts the [WordsEndpointConfig] into a string.
+ * Converts an endpoint configuration into into a string.
  * */
-abstract class ConfigurationToURLConverter {
-    /**
-     * Converts [WordsEndpointConfig] to URL in the form of String
-     * */
-    abstract fun from(config: WordsEndpointConfig): String
+class ConfigurationConverter {
+    companion object {
+        private const val WORDS_ENDPOINT_PATH = "words"
 
-    /**
-     * The [Default] converter is quite sufficient in most use cases.
-     * It will convert all the elements of the configuration, e.g.
-     * HardConstraint("elephant"), Topics("sea") and so on, into a
-     * Datamuse URL address in the form of a String including the
-     * authority, path and query parameters like:
-     * https://api.datamuse.com/words?ml=elephant&topics=sea
-     * */
-    object Default : ConfigurationToURLConverter() {
-        override fun from(config: WordsEndpointConfig): String {
+        /**
+         * It will convert all the elements of the [WordsEndpointConfig], e.g.
+         * HardConstraint("elephant"), Topics("sea") and so on, into a
+         * Datamuse URL address in the form of a String like:
+         * ```
+         *
+         * https://api.datamuse.com/words?ml=elephant&topics=sea
+         * ```
+         * @return the Datamuse Url as a String
+         * */
+        fun toWordsEndpoint(config: WordsEndpointConfig): String {
             val endpointKeyValue = toWordEndpointKeyValue(config)
-            return UrlBuilder(endpointKeyValue).build()
+            return DatamuseUrlBuilder(endpointKeyValue, WORDS_ENDPOINT_PATH).build()
         }
 
         /**
@@ -49,4 +48,6 @@ abstract class ConfigurationToURLConverter {
             listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
         }
     }
+
+
 }
