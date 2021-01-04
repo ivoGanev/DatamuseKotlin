@@ -1,8 +1,8 @@
 package com.ivo.ganev.datamusekotlin.feature.api
 
-import com.ivo.ganev.datamusekotlin.api.HardConstraint
-import com.ivo.ganev.datamusekotlin.api.HardConstraint.*
-import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint.*
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint.RelatedWords.Code
 
 /**
  * A class representing a single element of type [HardConstraint] with a label.

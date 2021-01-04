@@ -1,2 +1,3 @@
+include ':datamusekotlin'
 include ':app'
 rootProject.name = "DatamuseKotlin"

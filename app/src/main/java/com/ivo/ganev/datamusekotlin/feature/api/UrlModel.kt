@@ -2,9 +2,9 @@ package com.ivo.ganev.datamusekotlin.feature.api
 
 import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.RelatedWordsElement
 import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.RelatedWordsElement.create
-import com.ivo.ganev.datamusekotlin.api.HardConstraint
-import com.ivo.ganev.datamusekotlin.api.HardConstraint.RelatedWords.Code
-import com.ivo.ganev.datamusekotlin.api.MetadataFlag
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint.RelatedWords.Code
+import com.ivo.ganev.datamusekotlin.endpoint.words.MetadataFlag
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
 import com.ivo.ganev.datamusekotlin.extenstions.string
 import java.util.*

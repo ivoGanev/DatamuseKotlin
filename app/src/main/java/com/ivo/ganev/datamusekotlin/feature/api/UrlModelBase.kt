@@ -1,6 +1,9 @@
 package com.ivo.ganev.datamusekotlin.feature.api
 
-import com.ivo.ganev.datamusekotlin.api.*
+import com.ivo.ganev.datamusekotlin.configuration.ConfigurationBuilder
+import com.ivo.ganev.datamusekotlin.configuration.buildWordsEndpointUrl
+import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
+import com.ivo.ganev.datamusekotlin.endpoint.words.MetadataFlag
 import java.util.*
 
 /**
@@ -9,7 +12,7 @@ import java.util.*
  * bind the data from the UI to the URL builder. See [UrlModel]
  * for a concrete implementation example.
  * */
-abstract class UrlModelBase() {
+abstract class UrlModelBase {
 
     /**
      * All Datamuse /words endpoint queries require a single hard constraint

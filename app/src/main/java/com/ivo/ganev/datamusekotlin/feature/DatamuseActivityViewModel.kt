@@ -3,8 +3,10 @@ package com.ivo.ganev.datamusekotlin.feature
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivo.ganev.datamusekotlin.api.*
-import com.ivo.ganev.datamusekotlin.core.WordResponse
+import com.ivo.ganev.datamusekotlin.client.DatamuseClient
+import com.ivo.ganev.datamusekotlin.configuration.ConfigurationBuilder
+import com.ivo.ganev.datamusekotlin.response.RemoteFailure
+import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse
 import kotlinx.coroutines.launch
 
 class DatamuseActivityViewModel : ViewModel() {

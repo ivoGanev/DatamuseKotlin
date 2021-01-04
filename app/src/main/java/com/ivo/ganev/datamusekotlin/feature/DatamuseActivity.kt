@@ -12,9 +12,9 @@ import com.ivo.ganev.datamusekotlin.feature.api.ConstraintElement.*
 import com.ivo.ganev.datamusekotlin.feature.adapter.HardConstraintAdapter
 import com.ivo.ganev.datamusekotlin.feature.api.UrlModel
 import com.ivo.ganev.datamusekotlin.R
-import com.ivo.ganev.datamusekotlin.api.format
-import com.ivo.ganev.datamusekotlin.api.buildToString
-import com.ivo.ganev.datamusekotlin.core.WordResponse.Element.*
+import com.ivo.ganev.datamusekotlin.common.buildToString
+import com.ivo.ganev.datamusekotlin.common.format
+import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse.Element.*
 import com.ivo.ganev.datamusekotlin.core.toUrl
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
