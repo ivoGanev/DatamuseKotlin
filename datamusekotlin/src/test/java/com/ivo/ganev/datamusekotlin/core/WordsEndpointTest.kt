@@ -2,11 +2,13 @@ package com.ivo.ganev.datamusekotlin.core
 
 
 
+import com.ivo.ganev.datamusekotlin.common.toUrl
 import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint.RelatedWords.Code.*
 import com.ivo.ganev.datamusekotlin.endpoint.words.and
 import com.ivo.ganev.datamusekotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
 import com.ivo.ganev.datamusekotlin.endpoint.words.MetadataFlag
+import com.ivo.ganev.datamusekotlin.exceptions.UnspecifiedHardConstraintException
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
