@@ -2,6 +2,7 @@ package com.ivo.ganev.datamusekotlin.core
 
 import android.net.Uri
 import com.ivo.ganev.datamusekotlin.api.Configuration
+import okhttp3.HttpUrl
 
 /**
  * Builds a URL String from the list of [EndpointKeyValue]
@@ -15,10 +16,10 @@ internal class UrlBuilder(endpointKeyValues: List<EndpointKeyValue?>) {
 
     private val query: List<EndpointKeyValue> = endpointKeyValues.filterNotNull()
 
-    fun build(): String = Uri.Builder().apply {
+    fun build(): String = HttpUrl.Builder().apply {
         scheme(SCHEME)
-        authority(AUTHORITY)
-        path(PATH)
-        for (element in query) appendQueryParameter(element.key, element.value)
-    }.toString()
+        host(AUTHORITY)
+        addPathSegment(PATH)
+        for (element in query) addQueryParameter(element.key, element.value)
+    }.build().toString()
 }

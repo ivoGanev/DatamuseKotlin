@@ -2,10 +2,9 @@ package com.ivo.ganev.datamusekotlin
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ivo.ganev.datamusekotlin.api.*
-import com.ivo.ganev.datamusekotlin.core.*
+import com.ivo.ganev.datamusekotlin.core.Client
 import com.ivo.ganev.datamusekotlin.extensions.readAssetFile
 import kotlinx.coroutines.runBlocking
-import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
