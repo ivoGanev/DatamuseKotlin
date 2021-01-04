@@ -17,7 +17,7 @@ package com.ivo.ganev.datamusekotlin.configuration
 
 import com.ivo.ganev.datamusekotlin.endpoint.words.*
 
-data class Configuration(
+data class WordsEndpointConfig(
     @JvmField val hardConstraint: HardConstraint? = null,
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,

@@ -15,7 +15,7 @@
  */
 package com.ivo.ganev.datamusekotlin.feature.api
 
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationBuilder
+import com.ivo.ganev.datamusekotlin.configuration.WordsEndpointBuilder
 import com.ivo.ganev.datamusekotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
 import com.ivo.ganev.datamusekotlin.endpoint.words.MetadataFlag
@@ -84,7 +84,7 @@ abstract class UrlModelBase {
         else metadata()
     }
 
-    fun build(): ConfigurationBuilder {
+    fun build(): WordsEndpointBuilder {
         return buildWordsEndpointUrl {
             hardConstraint = constraint()
             topics = topicsNullable()

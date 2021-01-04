@@ -19,13 +19,13 @@ import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
 import com.ivo.ganev.datamusekotlin.endpoint.UrlBuilder
 
 /**
- * Converts the [Configuration] into a string.
+ * Converts the [WordsEndpointConfig] into a string.
  * */
-abstract class ConfigurationToStringConverter {
+abstract class ConfigurationToURLConverter {
     /**
-     * Converts [Configuration] to URL in the form of String
+     * Converts [WordsEndpointConfig] to URL in the form of String
      * */
-    abstract fun from(config: Configuration): String
+    abstract fun from(config: WordsEndpointConfig): String
 
     /**
      * The [Default] converter is quite sufficient in most use cases.
@@ -35,16 +35,16 @@ abstract class ConfigurationToStringConverter {
      * authority, path and query parameters like:
      * https://api.datamuse.com/words?ml=elephant&topics=sea
      * */
-    object Default : ConfigurationToStringConverter() {
-        override fun from(config: Configuration): String {
+    object Default : ConfigurationToURLConverter() {
+        override fun from(config: WordsEndpointConfig): String {
             val endpointKeyValue = toWordEndpointKeyValue(config)
             return UrlBuilder(endpointKeyValue).build()
         }
 
         /**
-         * Creates a list of [EndpointKeyValue] from [Configuration]
+         * Creates a list of [EndpointKeyValue] from [WordsEndpointConfig]
          * */
-        private fun toWordEndpointKeyValue(buildConfig: Configuration):
+        private fun toWordEndpointKeyValue(buildConfig: WordsEndpointConfig):
                 List<EndpointKeyValue?> = with(buildConfig) {
             listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
         }

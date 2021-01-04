@@ -2,10 +2,7 @@ package com.ivo.ganev.datamusekotlin.core
 
 import com.ivo.ganev.datamusekotlin.client.Client
 import com.ivo.ganev.datamusekotlin.client.DatamuseClient
-import com.ivo.ganev.datamusekotlin.configuration.Configuration
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationToStringConverter
-import com.ivo.ganev.datamusekotlin.configuration.buildWordsEndpointUrl
-import com.ivo.ganev.datamusekotlin.endpoint.words.HardConstraint
+import com.ivo.ganev.datamusekotlin.client.UrlConvertible
 import com.ivo.ganev.datamusekotlin.response.RemoteFailure
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -15,9 +12,8 @@ import org.junit.Before
 import org.junit.Test
 import java.io.File
 
-class ConfigureUrlToStringConverterStub(private val url: String) :
-    ConfigurationToStringConverter() {
-    override fun from(config: Configuration): String {
+class UrlConvertibleStub(private val url: String) : UrlConvertible {
+    override fun toUrl(): String {
         return url
     }
 }
@@ -28,8 +24,6 @@ class ConfigureUrlToStringConverterStub(private val url: String) :
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class DatamuseClientTest {
-    private val configBuilderFake = buildWordsEndpointUrl { hardConstraint = HardConstraint.MeansLike("") }
-
     private lateinit var body: String
 
     @Before
@@ -49,8 +43,8 @@ class DatamuseClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client: Client = DatamuseClient(ConfigureUrlToStringConverterStub(url.toString()))
-        val get = client.query(configBuilderFake)
+        val client: Client = DatamuseClient()
+        val get = client.query(UrlConvertibleStub(url.toString()))
 
         get.isResult shouldBeEqualTo true
         server.shutdown()
@@ -67,13 +61,12 @@ class DatamuseClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client: Client = DatamuseClient(ConfigureUrlToStringConverterStub(url.toString()))
-        val get = client.query(configBuilderFake)
+        val client: Client = DatamuseClient()
+        val get = client.query(UrlConvertibleStub(url.toString()))
 
         get.isFailure shouldBeEqualTo true
         get.applyEither({ if (it is RemoteFailure.HttpCodeFailure) it.failureCode shouldBeEqualTo 400 }, {})
 
         server.shutdown()
     }
-
 }

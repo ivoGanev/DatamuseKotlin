@@ -15,17 +15,30 @@
  */
 package com.ivo.ganev.datamusekotlin.configuration
 
+import com.ivo.ganev.datamusekotlin.client.UrlConvertible
+import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
 import com.ivo.ganev.datamusekotlin.endpoint.words.*
 import com.ivo.ganev.datamusekotlin.exceptions.UnspecifiedHardConstraintException
 import java.util.*
 
+/**
+ * A [ConfigurationBuilder] is used to create a [WordsEndpointConfig]
+ * which is made of [EndpointKeyValue]'s. It's basically an easy
+ * way to map user defined primitive-type options to [EndpointKeyValue]'s.
+ * */
+interface ConfigurationBuilder {
+    fun build(): WordsEndpointConfig
+}
 
 /**
- * This is a builder designed specifically for library clients. It will
+ * The [WordsEndpointBuilder] will build [WordsEndpointConfig] for the
+ * words/ endpoint. Usage: [buildWordsEndpointUrl]
  * */
-class ConfigurationBuilder {
+class WordsEndpointBuilder() : ConfigurationBuilder, UrlConvertible {
+
+
     /**
-     * A query element for the hard constraints.
+     * Set this to provide a hard constraint
      * @see [HardConstraint]
      * */
     var hardConstraint: HardConstraint? = null
@@ -59,8 +72,8 @@ class ConfigurationBuilder {
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 
-    internal fun build(): Configuration {
-        return Configuration(
+    override fun build(): WordsEndpointConfig {
+        return WordsEndpointConfig(
             hardConstraint,
             topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },
@@ -69,17 +82,33 @@ class ConfigurationBuilder {
             metadata?.let { Metadata(it) }
         )
     }
+
+    override fun toUrl(): String = ConfigurationToURLConverter.Default.from(this.build())
 }
 
 /**
  * Builds the URL address for the Datamuse API. In order to be able to build a URL you need to
  * provide at least a hard constraint.
  *
- * @throws UnspecifiedHardConstraintException - when no hard constraint is specified
+ *
+ * Usage:
+ *
+ * ```
+ * buildWordsEndpointUrl {
+ *  hardConstraint = HardConstraint.MeansLike("elephant")
+ *  topics = "first,second,third,fourth,fifth"
+ *  leftContext = "big"
+ *  rightContext = "ears"
+ *  maxResults = 10
+ *  metadata = MetadataFlag.DEFINITIONS and Metadata.Flag.PARTS_OF_SPEECH
+ * }
+ * ```
+ * @throws UnspecifiedHardConstraintException - when no hard constraint is specified.
+ * Reason: An endpoint with no hard constraint will yield no result.
  * */
-fun buildWordsEndpointUrl(wordsConfig: ConfigurationBuilder.() -> Unit):
-        ConfigurationBuilder {
-    val builder = ConfigurationBuilder()
+fun buildWordsEndpointUrl(wordsConfig: WordsEndpointBuilder.() -> Unit):
+        WordsEndpointBuilder {
+    val builder = WordsEndpointBuilder()
     builder.wordsConfig()
     if (builder.hardConstraint == null)
         throw UnspecifiedHardConstraintException(

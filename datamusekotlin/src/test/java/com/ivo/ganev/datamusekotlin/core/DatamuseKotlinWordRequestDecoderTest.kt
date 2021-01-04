@@ -1,8 +1,8 @@
 package com.ivo.ganev.datamusekotlin.core
 
+import com.ivo.ganev.datamusekotlin.common.format
 import com.ivo.ganev.datamusekotlin.endpoint.words.KotlinJsonWordDecoder
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse
-import com.ivo.ganev.datamusekotlin.api.format
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse.Element.*
 import kotlinx.serialization.SerializationException
 import org.amshove.kluent.shouldBe

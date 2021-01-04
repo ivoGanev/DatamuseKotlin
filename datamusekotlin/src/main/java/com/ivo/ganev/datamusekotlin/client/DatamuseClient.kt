@@ -17,8 +17,6 @@ package com.ivo.ganev.datamusekotlin.client
 
 import com.ivo.ganev.datamusekotlin.response.QueryResponse
 import com.ivo.ganev.datamusekotlin.response.RemoteFailure
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationBuilder
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationToStringConverter
 import com.ivo.ganev.datamusekotlin.endpoint.words.DatamuseJsonResponseDecoder
 import com.ivo.ganev.datamusekotlin.endpoint.words.KotlinJsonWordDecoder
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse
@@ -31,27 +29,16 @@ import okhttp3.Request
  * [DatamuseClient]'s purpose is to make queries to it's endpoints and retrieve
  * the results in a [QueryResponse]
  * */
-class DatamuseClient(private val configurationToStringConverter: ConfigurationToStringConverter) :
-    Client {
-    constructor() : this(configurationToStringConverter = ConfigurationToStringConverter.Default)
-
+class DatamuseClient : Client {
     private val decoder: DatamuseJsonResponseDecoder = KotlinJsonWordDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
     /**
      * Calling this method will retrieve a single JSON query from Datamuse.
      * */
-    override suspend fun query(config: ConfigurationBuilder):
+    override suspend fun query(urlConvertible: UrlConvertible):
             QueryResponse<RemoteFailure, Set<WordResponse>> =
-        queryAsync(makeUrl(config)).await()
-
-    /**
-     * Creates a Url with the help of the [ConfigurationToStringConverter]
-     * This step is a way to make the client possible to test with a fake URL
-     * configuration.
-     * */
-    private fun makeUrl(config: ConfigurationBuilder) : String =
-        configurationToStringConverter.from(config.build())
+        queryAsync(urlConvertible.toUrl()).await()
 
     /**
      * Will query the Datamuse API asynchronously

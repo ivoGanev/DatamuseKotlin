@@ -15,8 +15,8 @@
  */
 package com.ivo.ganev.datamusekotlin.common
 
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationBuilder
-import com.ivo.ganev.datamusekotlin.configuration.ConfigurationToStringConverter
+import com.ivo.ganev.datamusekotlin.configuration.WordsEndpointBuilder
+import com.ivo.ganev.datamusekotlin.configuration.ConfigurationToURLConverter
 
 /**
  * Filter's the first result found as a value and returns
@@ -34,4 +34,4 @@ inline fun <K, V> Map<out K, V>.filterFirst(predicate: (V) -> Boolean): Pair<K, 
 /**
  * Will output the configuration as a URL string
  * */
-fun ConfigurationBuilder.toUrl(): String = ConfigurationToStringConverter.Default.from(this.build())
+fun WordsEndpointBuilder.toUrl(): String = ConfigurationToURLConverter.Default.from(this.build())
