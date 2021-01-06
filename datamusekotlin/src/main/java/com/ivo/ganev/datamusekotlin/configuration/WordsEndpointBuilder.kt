@@ -15,17 +15,22 @@
  */
 package com.ivo.ganev.datamusekotlin.configuration
 
-import com.ivo.ganev.datamusekotlin.client.UrlConvertible
 import com.ivo.ganev.datamusekotlin.endpoint.words.*
 import com.ivo.ganev.datamusekotlin.exceptions.UnspecifiedHardConstraintException
 import java.util.*
 
 
+abstract class EndpointBuilder<out T : UrlConfig>
+{
+    abstract fun build() : T
+
+    fun buildUrl() : String = build().toUrl()
+}
 /**
- * The [WordsEndpointBuilder] will build [WordsEndpointConfig] for the
+ * The [WordsEndpointBuilder] will build [WordsEndpointUrlConfig] for the
  * words/ endpoint. Usage: [buildWordsEndpointUrl]
  * */
-class WordsEndpointBuilder() : UrlConvertible {
+class WordsEndpointBuilder : EndpointBuilder<WordsEndpointUrlConfig>() {
     /**
      * Set this to provide a hard constraint
      * @see [HardConstraint]
@@ -62,8 +67,8 @@ class WordsEndpointBuilder() : UrlConvertible {
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 
-     fun build(): WordsEndpointConfig {
-        return WordsEndpointConfig(
+     override fun build(): WordsEndpointUrlConfig {
+        return WordsEndpointUrlConfig(
             hardConstraint,
             topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },
@@ -72,8 +77,6 @@ class WordsEndpointBuilder() : UrlConvertible {
             metadata?.let { Metadata(it) }
         )
     }
-
-    override fun toUrl(): String = ConfigurationConverter.toWordsEndpoint(this.build())
 }
 
 /**

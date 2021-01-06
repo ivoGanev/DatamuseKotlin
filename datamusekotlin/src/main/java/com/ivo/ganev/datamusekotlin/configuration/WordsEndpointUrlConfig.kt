@@ -15,13 +15,35 @@
  */
 package com.ivo.ganev.datamusekotlin.configuration
 
+import com.ivo.ganev.datamusekotlin.client.UrlConvertible
+import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
 import com.ivo.ganev.datamusekotlin.endpoint.words.*
 
-data class WordsEndpointConfig(
+abstract class UrlConfig:  UrlConvertible  {
+    val scheme = "https"
+    val authority = "api.datamuse.com"
+
+    abstract val path: String
+    internal abstract fun getQuery(): List<EndpointKeyValue?>
+
+    override fun toUrl(): String {
+        return ConfigurationConverter.convert(this)
+    }
+}
+
+data class WordsEndpointUrlConfig(
     @JvmField val hardConstraint: HardConstraint? = null,
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,
     @JvmField val rightContext: RightContext? = null,
     @JvmField val maxResults: MaxResults? = null,
     @JvmField val metadata: Metadata? = null
-)
+) : UrlConfig(){
+    override val path: String
+        get() = "words"
+
+    override fun getQuery(): List<EndpointKeyValue?> {
+        return listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
+    }
+}
+

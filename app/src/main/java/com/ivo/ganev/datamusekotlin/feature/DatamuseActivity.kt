@@ -29,6 +29,9 @@ import com.ivo.ganev.datamusekotlin.feature.api.UrlModel
 import com.ivo.ganev.datamusekotlin.R
 import com.ivo.ganev.datamusekotlin.common.buildToString
 import com.ivo.ganev.datamusekotlin.common.format
+import com.ivo.ganev.datamusekotlin.configuration.EndpointBuilder
+import com.ivo.ganev.datamusekotlin.configuration.WordsEndpointBuilder
+import com.ivo.ganev.datamusekotlin.configuration.WordsEndpointUrlConfig
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse.Element.*
 
 import com.ivo.ganev.datamusekotlin.databinding.DatamuseDemoActivityBinding
@@ -53,23 +56,23 @@ class DatamuseActivity : AppCompatActivity(),
         setContentView(binding.root)
 
         constraintAdapter = HardConstraintAdapter(this, constraints)
-        binding.constraintSpinner.onItemSelectedListener = this
+        binding.hardConstraintSpinner.onItemSelectedListener = this
+        binding.hardConstraintSpinner.adapter = constraintAdapter
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
-        binding.constraintSpinner.adapter = constraintAdapter
-        binding.constraintRelSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
+        binding.relatedWordsSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
         modelUrlBuilder = UrlModel(binding)
 
-        viewModel.result.observe(this, {
+        viewModel.result.observe(this, { wordResponseSet ->
             var i = 0
             binding.tvResponse.text = ""
 
-            it.forEach { wordResponse ->
-                val word = wordResponse[Word::class]?.word
-                val score = wordResponse[Score::class]?.score
-                val definitions = wordResponse[Definitions::class]?.format()?.buildToString()
-                val tags = wordResponse[Tags::class]?.tags
-                val syllablesCount = wordResponse[SyllablesCount::class]?.numSyllables
-                val defHeadwords = wordResponse[DefHeadwords::class]?.defHeadword
+            wordResponseSet.forEach {
+                val word = it[Word::class]?.word
+                val score = it[Score::class]?.score
+                val definitions = it[Definitions::class]?.format()?.buildToString()
+                val tags = it[Tags::class]?.tags
+                val syllablesCount = it[SyllablesCount::class]?.numSyllables
+                val defHeadwords = it[DefHeadwords::class]?.defHeadword
 
                 val jsonFormattedOutput = buildString {
                     append("${++i}. $word\n")
@@ -81,7 +84,7 @@ class DatamuseActivity : AppCompatActivity(),
                         append("Tags: $tags\n")
                     if (syllablesCount != null)
                         append("Syllable Count: $syllablesCount\n")
-                    if (defHeadwords!=null)
+                    if (defHeadwords != null)
                         append("Def Headwords: $defHeadwords")
                     append("\n\n")
                 }
@@ -95,19 +98,19 @@ class DatamuseActivity : AppCompatActivity(),
     }
 
     override fun onClick(v: View?) {
-        if (v isWithId R.id.btn_fetch) {
+        if (v isWithId R.id.btn_query) {
             val config = modelUrlBuilder.build()
-            binding.tvUrl.text = config.toUrl()
+            binding.tvUrl.text = config.buildUrl()
             viewModel.makeNetworkRequest(modelUrlBuilder.build())
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (parent isWithId R.id.constraint_spinner) {
-            if (constraints[position] == RelatedWordsElement)
-                binding.constraintRelSpinner.visibility = View.VISIBLE
-            else
-                binding.constraintRelSpinner.visibility = View.GONE
+        if (parent isWithId R.id.hard_constraint_spinner) {
+            binding.relatedWordsSpinner.visibility = when (constraints[position]) {
+                is RelatedWordsElement -> View.VISIBLE
+                else -> View.GONE
+            }
         }
     }
 

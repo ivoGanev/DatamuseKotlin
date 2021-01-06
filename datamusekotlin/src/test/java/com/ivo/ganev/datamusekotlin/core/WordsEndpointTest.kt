@@ -35,34 +35,34 @@ class WordsEndpointTest {
         // words with a meaning similar to ringing in the ears
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.MeansLike("ringing in the ears")
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
 
         // words sounding like duck and rice to a maximum of 20
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.SoundsLike("duck and rice")
             maxResults = 20
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.SpelledLike("men")
             leftContext = "sweet"
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(POPULAR_ADJECTIVES, "sea")
             rightContext = "awake"
             leftContext = "mate"
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "ocean")
             topics = "temperature"
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "girl")
             metadata = METADATA_ALL
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
 
         buildWordsEndpointUrl {
             hardConstraint = HardConstraint.RelatedWords(COMPRISES, "complete test")
@@ -71,6 +71,6 @@ class WordsEndpointTest {
             topics = "topic"
             maxResults = 101
             metadata = METADATA_B
-        }.toUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_com=complete%20test&topics=topic&lc=left&rc=right&max=101&md=dp"
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_com=complete%20test&topics=topic&lc=left&rc=right&max=101&md=dp"
     }
 }

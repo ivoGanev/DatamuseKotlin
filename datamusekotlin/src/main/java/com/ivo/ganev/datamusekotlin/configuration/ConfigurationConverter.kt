@@ -15,39 +15,22 @@
  */
 package com.ivo.ganev.datamusekotlin.configuration
 
-import com.ivo.ganev.datamusekotlin.endpoint.EndpointKeyValue
-import com.ivo.ganev.datamusekotlin.endpoint.DatamuseUrlBuilder
+import okhttp3.HttpUrl
 
 /**
- * Converts an endpoint configuration into into a string.
+ * Converts an endpoint configuration into into a URL String
  * */
 class ConfigurationConverter {
     companion object {
-        private const val WORDS_ENDPOINT_PATH = "words"
+        fun convert(urlConfig: UrlConfig): String {
+            val endpointKeyValue = urlConfig.getQuery()
 
-        /**
-         * It will convert all the elements of the [WordsEndpointConfig], e.g.
-         * HardConstraint("elephant"), Topics("sea") and so on, into a
-         * Datamuse URL address in the form of a String like:
-         * ```
-         *
-         * https://api.datamuse.com/words?ml=elephant&topics=sea
-         * ```
-         * @return the Datamuse Url as a String
-         * */
-        fun toWordsEndpoint(config: WordsEndpointConfig): String {
-            val endpointKeyValue = toWordEndpointKeyValue(config)
-            return DatamuseUrlBuilder(endpointKeyValue, WORDS_ENDPOINT_PATH).build()
-        }
-
-        /**
-         * Creates a list of [EndpointKeyValue] from [WordsEndpointConfig]
-         * */
-        private fun toWordEndpointKeyValue(buildConfig: WordsEndpointConfig):
-                List<EndpointKeyValue?> = with(buildConfig) {
-            listOf(hardConstraint, topic, leftContext, rightContext, maxResults, metadata)
+            return HttpUrl.Builder().apply {
+                scheme(urlConfig.scheme)
+                host(urlConfig.authority)
+                addPathSegment(urlConfig.path)
+                for (element in endpointKeyValue.filterNotNull()) addQueryParameter(element.key, element.value)
+            }.toString()
         }
     }
-
-
 }

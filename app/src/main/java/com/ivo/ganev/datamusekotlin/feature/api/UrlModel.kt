@@ -45,8 +45,8 @@ class UrlModel(private val binding: DatamuseDemoActivityBinding) :
     )
 
     override fun constraint(): HardConstraint {
-        val spinnerConstraint = binding.constraintSpinner.selectedItem as ConstraintElement
-        val spinnerCode = binding.constraintRelSpinner.selectedItem as String
+        val spinnerConstraint = binding.hardConstraintSpinner.selectedItem as ConstraintElement
+        val spinnerCode = binding.relatedWordsSpinner.selectedItem as String
         val code = RelatedWordsElement.codeMap[spinnerCode] ?: Code.APPROXIMATE_RHYMES
         val keyword = binding.etWord.string()
 

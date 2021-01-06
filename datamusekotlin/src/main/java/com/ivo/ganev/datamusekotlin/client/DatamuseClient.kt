@@ -15,6 +15,8 @@
  */
 package com.ivo.ganev.datamusekotlin.client
 
+import com.ivo.ganev.datamusekotlin.configuration.EndpointBuilder
+import com.ivo.ganev.datamusekotlin.configuration.UrlConfig
 import com.ivo.ganev.datamusekotlin.response.QueryResponse
 import com.ivo.ganev.datamusekotlin.response.RemoteFailure
 import com.ivo.ganev.datamusekotlin.endpoint.words.DatamuseJsonResponseDecoder
@@ -34,11 +36,11 @@ class DatamuseClient : Client {
     private val httpClient: OkHttpClient = OkHttpClient()
 
     /**
-     * Calling this method will retrieve a single JSON query from Datamuse.
+     * Call this method to retrieve a single JSON query from Datamuse.
      * */
-    override suspend fun query(urlConvertible: UrlConvertible):
+    override suspend fun query(builder: EndpointBuilder<UrlConfig>):
             QueryResponse<RemoteFailure, Set<WordResponse>> =
-        queryAsync(urlConvertible.toUrl()).await()
+        queryAsync(builder.buildUrl()).await()
 
     /**
      * Will query the Datamuse API asynchronously

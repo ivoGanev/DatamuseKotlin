@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Datamuse Response:"
-        app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
+        app:layout_constraintBottom_toTopOf="@+id/btn_query"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_url"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_lc" />
 
     <Button
-        android:id="@+id/btn_fetch"
+        android:id="@+id/btn_query"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -59,14 +59,14 @@
         android:scrollbarSize="10dp"
         android:scrollbars="vertical"
         android:text="Tap query to get a Datamuse JSON response"
-        app:layout_constraintBottom_toTopOf="@+id/btn_fetch"
+        app:layout_constraintBottom_toTopOf="@+id/btn_query"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_response_label"
         app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
-        android:id="@+id/constraint_spinner"
+        android:id="@+id/hard_constraint_spinner"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:gravity="center"
@@ -76,14 +76,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/constraint_rel_spinner"
+        android:id="@+id/related_words_spinner"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/hard_constraint_spinner" />
 
     <EditText
         android:id="@+id/et_word"
@@ -97,7 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_rel_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/related_words_spinner" />
 
     <CheckBox
         android:id="@+id/cb_definitions"

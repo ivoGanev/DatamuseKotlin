@@ -60,6 +60,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
     implementation project(":datamusekotlin")
+  //  implementation files('libs/datamusekotlin.jar')
 
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
     testImplementation 'junit:junit:4.13.1'

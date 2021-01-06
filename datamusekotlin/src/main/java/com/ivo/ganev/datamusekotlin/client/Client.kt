@@ -15,12 +15,15 @@
  */
 package com.ivo.ganev.datamusekotlin.client
 
+import com.ivo.ganev.datamusekotlin.configuration.EndpointBuilder
+import com.ivo.ganev.datamusekotlin.configuration.UrlConfig
+import com.ivo.ganev.datamusekotlin.configuration.WordsEndpointBuilder
 import com.ivo.ganev.datamusekotlin.response.QueryResponse
 import com.ivo.ganev.datamusekotlin.response.RemoteFailure
 import com.ivo.ganev.datamusekotlin.endpoint.words.WordResponse
 
 internal interface Client {
-   suspend fun query(urlConvertible: UrlConvertible) :
+   suspend fun query(builder: EndpointBuilder<UrlConfig>) :
            QueryResponse<RemoteFailure, Set<WordResponse>>
 }
 

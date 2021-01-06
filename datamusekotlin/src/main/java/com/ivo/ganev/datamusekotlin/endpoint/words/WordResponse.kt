@@ -75,4 +75,17 @@ class WordResponse(val elements: Set<Element>) {
     inline operator fun <reified T : Element> get(element: KClass<T>): T? {
         return elements.find { element.isInstance(it) && element != Element::class } as T?
     }
+
+    /**
+     * Same as [get] but with different syntax
+     *
+     * Example:
+     *
+     * val word = wordResponse.get<Word>()?.word
+     * */
+    inline fun <reified T : Element> get() : T? {
+        for (element in elements)
+            if(element is T) return element
+        return null
+    }
 }
