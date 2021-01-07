@@ -20,7 +20,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamuse_kotlin.R
 import com.ivo.ganev.datamuse_kotlin.client.DatamuseClient
-import com.ivo.ganev.datamuse_kotlin.common.buildToString
+import com.ivo.ganev.datamuse_kotlin.common.string
 import com.ivo.ganev.datamuse_kotlin.common.format
 import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
@@ -28,6 +28,7 @@ import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 /**
  * Simple activity to demonstrate how datamuse-kotlin works.
@@ -59,7 +60,7 @@ class SimpleDemoActivity : AppCompatActivity() {
         /*
          * Another configuration which won't return anything because the query is
          * complex and meaningless. Never the less it demonstrates how to assign
-         *  all the properties to create a query
+         *  all the builder properties to create a query.
          * */
         val query2 = buildWordsEndpointUrl {
             // you can chain constraints with the help of "and" infix function
@@ -85,14 +86,14 @@ class SimpleDemoActivity : AppCompatActivity() {
             val query = datamuseClient.queryWordsEndpointAsync(query1).await()
 
             query.applyEither({
-                // Will trigger only when there is some kind of a failure, usually a bad response code
+                // Will trigger only when there is some kind of a failure, usually a bad response code.
                     remoteFailure ->
                 when (remoteFailure) {
                     is RemoteFailure.HttpCodeFailure -> println(remoteFailure.failureCode) // Failed Http Response codes?
-                    is RemoteFailure.MalformedJsonBodyFailure -> println(remoteFailure.message) // Any serialization error
+                    is RemoteFailure.MalformedJsonBodyFailure -> println(remoteFailure.message) // Any serialization error.
                 }
             }, {
-                // This part of the function will be applied when a successful query has been made
+                // This part of the function will be applied when a successful query has been made.
 
                 // wordResponses: is the collection of words and their properties returned from the query, for example,
                 // in query1 we've build a query to look for words with a similar meaning of an
@@ -108,7 +109,9 @@ class SimpleDemoActivity : AppCompatActivity() {
                         when (element) {
                             is WordResponse.Element.Word -> queryTextView.append("\nWord: ${element.word}")
                             is WordResponse.Element.Score ->  queryTextView.append("\n Score: ${element.score}")
-                            is WordResponse.Element.Definitions ->  queryTextView.append("\n Definitions: ${element.defs}")
+                            // you can use format() to separate the part of word from the definition because the response comes as:
+                            // "defs":["adj\tof great mass; huge and bulky"]}
+                            is WordResponse.Element.Definitions ->  queryTextView.append("\n Definitions: ${element.format().string()}")
                             is WordResponse.Element.Tags ->  queryTextView.append("\n Tags: ${element.tags}")
                             is WordResponse.Element.SyllablesCount ->  queryTextView.append("\n Syllable Count: ${element.numSyllables}")
                             is WordResponse.Element.DefHeadwords ->  queryTextView.append("\n DefHeadwords ${element.defHeadword}")

@@ -15,11 +15,42 @@
  */
 package com.ivo.ganev.datamuse_kotlin.endpoint.words
 
+import com.ivo.ganev.datamuse_kotlin.common.format
+import com.ivo.ganev.datamuse_kotlin.common.string
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 
 @Serializable(with = WordResponseSerializer::class)
+
+/**
+ * The WordResponse is representing a single word coming from the JSON response
+ * with its properties which are defined as [Element]. So for example,
+ * ```
+ *   {
+ *    "word": "shruff",
+ *    "score": 93,
+ *    "numSyllables": 1
+ *   }
+ *   ```
+ *   could be retrieved like:
+ *   ```
+ * wordResponses.forEach {
+ * for (element in it.elements) {
+ *      when (element) {
+ *           is WordResponse.Element.Word -> queryTextView.append("\nWord: ${element.word}")
+ *            is WordResponse.Element.Score ->  queryTextView.append("\n Score: ${element.score}")
+ *            // you can use format() to separate the part of word from the definition because the response comes as:
+ *            // "defs":["adj\tof great mass; huge and bulky"]}
+ *            is WordResponse.Element.Definitions ->  queryTextView.append("\n Definitions: ${element.format().string()}")
+ *            is WordResponse.Element.Tags ->  queryTextView.append("\n Tags: ${element.tags}")
+ *            is WordResponse.Element.SyllablesCount ->  queryTextView.append("\n Syllable Count: ${element.numSyllables}")
+ *            is WordResponse.Element.DefHeadwords ->  queryTextView.append("\n DefHeadwords ${element.defHeadword}")
+ *        }
+ *    }
+ *}
+ ```
+*/
 class WordResponse(val elements: Set<Element>)  {
     @Serializable
     sealed class Element {
@@ -44,7 +75,7 @@ class WordResponse(val elements: Set<Element>)  {
 
     /**
      * *  Retrieves a single element from the element set: [elements]
-     * @param element is a KClass of type [Element] like [Score]. Example "Score::class"
+     * @param element is a KClass of type [Element] like [Element.Score]. Example "Score::class"
      *
      * ```
      * Example: Let's look at the JSON response:
@@ -60,30 +91,14 @@ class WordResponse(val elements: Set<Element>)  {
      * ]
      *```
      *
-     * In order to retrieve the [Word] element all you need to do is call:
+     * In order to retrieve the [Element.Word] element all you need to do is call:
      *
      * myWordResponse[Word::class]?.word
-     *
-     * Elements are nullable for the reason that not every json response
-     * will carry all of them.
      *
      * @returns [Element] if the set contains it and null when there is
      * no element of the provided type.
      * */
     inline operator fun <reified T : Element> get(element: KClass<T>): T? {
         return elements.find { element.isInstance(it) && element != Element::class } as T?
-    }
-
-    /**
-     * Same as [get] but with different syntax
-     *
-     * Example:
-     *
-     * val word = wordResponse.get<Word>()?.word
-     * */
-    inline fun <reified T : Element> get(): T? {
-        for (element in elements)
-            if (element is T) return element
-        return null
     }
 }

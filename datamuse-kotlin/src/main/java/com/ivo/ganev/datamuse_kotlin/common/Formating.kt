@@ -47,9 +47,8 @@ enum class SpeechPart(val label: String) {
  *
  * (Verb), "second definition of the word"
  *
- * and so on
  * */
-fun List<Pair<SpeechPart?, String>>.buildToString() : String  {
+fun List<Pair<SpeechPart?, String>>.string() : String  {
     val result = StringBuilder()
     for (element in this) {
         val first = element.first?.label ?: ""

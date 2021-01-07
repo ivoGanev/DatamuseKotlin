@@ -29,18 +29,33 @@ import kotlinx.coroutines.launch
 class DatamuseActivityViewModel : ViewModel() {
     private val client = DatamuseClient()
 
+    /**
+     * If there are any errors or failures this will notify all
+     * of the observers.
+     * */
     val failure: MutableLiveData<RemoteFailure> by lazy {
         MutableLiveData<RemoteFailure>()
     }
 
+    /**
+     * As soon as the query has been returned and there are no
+     * errors this will notify all the observers.
+     * */
     val result: MutableLiveData<Set<WordResponse>> by lazy {
         MutableLiveData<Set<WordResponse>>()
     }
 
+    /**
+     * As soon as the query is made this will produce the entire URL.
+     * */
     val url: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 
+    /**
+     * The function will query the Datamuse client for response.
+     * It will either set the value of [failure] or [result] and set the value for [url].
+     * */
     fun makeNetworkRequest(config: EndpointBuilder<WordsEndpointQueryConfig>) {
         viewModelScope.launch {
             val get = client.queryWordsEndpoint(config)

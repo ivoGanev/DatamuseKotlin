@@ -25,7 +25,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamuse_kotlin.R
-import com.ivo.ganev.datamuse_kotlin.common.buildToString
+import com.ivo.ganev.datamuse_kotlin.common.string
 import com.ivo.ganev.datamuse_kotlin.common.format
 import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.databinding.DatamuseDemoActivityBinding
@@ -40,12 +40,12 @@ import com.ivo.ganev.datamuse_kotlin.feature.ConstraintElement.*
 import com.ivo.ganev.datamuse_kotlin.feature.ConstraintElement.RelatedWordsElement.codeMap
 import java.util.*
 
+/**
+ * A little more involved demo activity to illustrate how the library can be used.
+ * */
 class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    /*
-     * Each MetadataFlag from the activity corresponds to a checkbox.
-     * */
     private lateinit var metadataCheckboxMap: Map<MetadataFlag, CheckBox>
     private lateinit var binding: DatamuseDemoActivityBinding
     private lateinit var constraintAdapter: HardConstraintAdapter
@@ -61,6 +61,9 @@ class DatamuseActivity : AppCompatActivity(),
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
         binding.relatedWordsSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, codeMap.keys.toList())
 
+        /*
+        *  Each MetadataFlag from the activity corresponds to a checkbox.
+        * */
         metadataCheckboxMap = mapOf(
             MetadataFlag.DEFINITIONS to binding.cbDefinitions,
             MetadataFlag.PARTS_OF_SPEECH to binding.cbPartsOfSpeech,
@@ -82,9 +85,13 @@ class DatamuseActivity : AppCompatActivity(),
             binding.tvResponse.text = ""
 
             wordResponseSet.forEach {
+                // Yet another way to extract all the elements of the words
+                // from the response. If checking for null is not the most
+                // appealing idea, see [SimpleDemoActivity] how to use "when"
+                // to avoid it.
                 val word = it[Word::class]?.word
                 val score = it[Score::class]?.score
-                val definitions = it[Definitions::class]?.format()?.buildToString()
+                val definitions = it[Definitions::class]?.format()?.string()
                 val tags = it[Tags::class]?.tags
                 val syllablesCount = it[SyllablesCount::class]?.numSyllables
                 val defHeadwords = it[DefHeadwords::class]?.defHeadword
