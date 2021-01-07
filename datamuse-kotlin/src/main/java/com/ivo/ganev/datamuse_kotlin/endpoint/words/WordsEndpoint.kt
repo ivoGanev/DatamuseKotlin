@@ -184,6 +184,10 @@ sealed class HardConstraint(override val value: String) : EndpointKeyValue {
         override val value: String
             get() = super.value
     }
+
+    override fun toString(): String {
+        return "${this::class.java}, key: $key, value: $value"
+    }
 }
 
 /**

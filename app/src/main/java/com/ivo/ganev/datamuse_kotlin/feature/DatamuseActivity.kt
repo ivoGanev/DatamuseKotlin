@@ -23,48 +23,45 @@ import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import com.ivo.ganev.datamuse_kotlin.R
 import com.ivo.ganev.datamuse_kotlin.common.buildToString
 import com.ivo.ganev.datamuse_kotlin.common.format
-import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.databinding.DatamuseDemoActivityBinding
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.RelatedWords
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.Metadata
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.MetadataFlag
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.*
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element.*
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.and
 import com.ivo.ganev.datamuse_kotlin.extenstions.isWithId
+import com.ivo.ganev.datamuse_kotlin.extenstions.string
 import com.ivo.ganev.datamuse_kotlin.feature.adapter.HardConstraintAdapter
 import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.*
+import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.RelatedWordsElement.codeMap
 import com.ivo.ganev.datamuse_kotlin.feature.api.UrlModel
 
 
 class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener, AdapterView.OnItemSelectedListener {
+
     private lateinit var binding: DatamuseDemoActivityBinding
-    private lateinit var constraintAdapter: SpinnerAdapter
-    private lateinit var modelUrlBuilder: UrlModel
+    private lateinit var constraintAdapter: HardConstraintAdapter
+    private lateinit var modelBuilder: UrlModel
 
     private val viewModel: DatamuseActivityViewModel by viewModels()
 
-    private val constraints = listOf(
-        MeansLikeElement, SoundsLikeElement, SpelledLikeElement, RelatedWordsElement
-    )
+    private fun configure() {
+        constraintAdapter = HardConstraintAdapter(this)
+        binding.btnAddConstraint.setOnClickListener(this)
+        binding.hardConstraintSpinner.adapter = constraintAdapter
+        binding.hardConstraintSpinner.onItemSelectedListener = this
+
+        binding.tvResponse.movementMethod = ScrollingMovementMethod()
+        binding.relatedWordsSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, codeMap.keys.toList())
+        modelBuilder = UrlModel(binding)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DatamuseDemoActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        constraintAdapter = HardConstraintAdapter(this, constraints)
-        binding.hardConstraintSpinner.onItemSelectedListener = this
-        binding.hardConstraintSpinner.adapter = constraintAdapter
-        binding.tvResponse.movementMethod = ScrollingMovementMethod()
-        binding.relatedWordsSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, RelatedWordsElement.codeMap.keys.toList())
-        modelUrlBuilder = UrlModel(binding)
-
+        configure()
         viewModel.result.observe(this, { wordResponseSet ->
             var i = 0
             binding.tvResponse.text = ""
@@ -104,17 +101,39 @@ class DatamuseActivity : AppCompatActivity(),
 
     }
 
+
     override fun onClick(v: View?) {
-        if (v isWithId R.id.btn_query) {
-            val config = modelUrlBuilder.build()
-            binding.tvUrl.text = config.buildUrl()
-            viewModel.makeNetworkRequest(modelUrlBuilder.build())
+        when {
+            v isWithId R.id.btn_query -> onQuery()
+            v isWithId R.id.btn_add_constraint -> onAddConstraint()
         }
     }
 
+    private fun onAddConstraint() {
+        val spinnerPosition = binding.hardConstraintSpinner.selectedItemPosition
+        val word = binding.etWord.string()
+        val constraint = constraintAdapter.constraints[spinnerPosition].create(word)
+        binding.cgHardConstraints.addConstraint(constraint)
+    }
+
+    // if a query button gets clicked I need to make a network request
+    // meaning:
+    // 1. Collect all the data from the activity and send it to the view model.
+    private fun onQuery() {
+        // start by taking the hard constraint
+
+        val hardConstraints = binding.cgHardConstraints
+       // val config = modelBuilder.build()
+     //   binding.tvUrl.text = config.buildUrl()
+      //  viewModel.makeNetworkRequest(modelBuilder.build())
+    }
+
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent isWithId R.id.hard_constraint_spinner) {
-            binding.relatedWordsSpinner.visibility = when (constraints[position]) {
+            val element = constraintAdapter.constraints[position]
+
+            binding.relatedWordsSpinner.visibility = when (element) {
                 is RelatedWordsElement -> View.VISIBLE
                 else -> View.GONE
             }

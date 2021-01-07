@@ -50,10 +50,11 @@ class UrlModel(private val binding: DatamuseDemoActivityBinding) :
         val code = RelatedWordsElement.codeMap[spinnerCode] ?: Code.APPROXIMATE_RHYMES
         val keyword = binding.etWord.string()
 
-        return when (spinnerConstraint) {
-            is RelatedWordsElement -> create(code, keyword)
-            else -> spinnerConstraint.create(keyword)
-        }
+        return emptySet()
+//        return when (spinnerConstraint) {
+//            is RelatedWordsElement -> create(code, keyword)
+//            else -> spinnerConstraint.create(keyword)
+//        }
     }
 
     override fun topics(): String {

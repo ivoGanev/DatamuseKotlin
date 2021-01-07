@@ -22,23 +22,29 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
-import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement
 import com.ivo.ganev.datamuse_kotlin.R
+import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.*
 
 class HardConstraintAdapter(
     context: Context,
-    private val hardConstraint: List<ConstraintElement>
-) :
-    BaseAdapter(), SpinnerAdapter {
+) : BaseAdapter(), SpinnerAdapter {
+
+    /*
+     * The list is related only with this adapter and its read-only
+     * so there is no point to stay in the activity.
+     * */
+    val constraints = listOf(
+        MeansLikeElement, SoundsLikeElement, SpelledLikeElement, RelatedWordsElement
+    )
 
     private val layoutInflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
-        return hardConstraint.size
+        return constraints.size
     }
 
     override fun getItem(position: Int): Any {
-        return hardConstraint[position]
+        return constraints[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -46,9 +52,9 @@ class HardConstraintAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: layoutInflater.inflate(R.layout.spinner_item,parent,false)
+        val view = convertView ?: layoutInflater.inflate(R.layout.spinner_item, parent, false)
         val text = view.findViewById<TextView>(R.id.tv_spinner_item)
-        text?.text = hardConstraint[position].label
+        text?.text = constraints[position].label
         return view
     }
 
