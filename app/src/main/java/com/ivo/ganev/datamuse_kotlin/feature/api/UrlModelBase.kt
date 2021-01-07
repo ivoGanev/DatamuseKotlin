@@ -33,7 +33,7 @@ abstract class UrlModelBase {
      * All Datamuse /words endpoint queries require a single hard constraint
      * to return a meaningful result
      * */
-    abstract fun constraint(): HardConstraint
+    abstract fun constraint(): Set<HardConstraint>
 
     /**
      * Override to build query with topics

@@ -44,7 +44,7 @@ class UrlModel(private val binding: DatamuseDemoActivityBinding) :
         binding.cbWordFrequency to MetadataFlag.WORD_FREQUENCY
     )
 
-    override fun constraint(): HardConstraint {
+    override fun constraint(): Set<HardConstraint> {
         val spinnerConstraint = binding.hardConstraintSpinner.selectedItem as ConstraintElement
         val spinnerCode = binding.relatedWordsSpinner.selectedItem as String
         val code = RelatedWordsElement.codeMap[spinnerCode] ?: Code.APPROXIMATE_RHYMES

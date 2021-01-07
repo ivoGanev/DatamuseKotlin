@@ -21,7 +21,16 @@ import java.util.EnumSet.of
 
 typealias MetadataFlag = Metadata.Flag
 
+fun hardConstraintsOf(vararg hardConstraint: HardConstraint): Set<HardConstraint> {
+    return setOf(*hardConstraint)
+}
+
 sealed class HardConstraint(override val value: String) : EndpointKeyValue {
+
+    /**
+     * Combines the two hard constraints into a set of [HardConstraint]
+     * */
+    infix fun and(other: HardConstraint) : Set<HardConstraint> = hardConstraintsOf(this, other)
 
     /**
      * 	Means like constraint: require that the results have a meaning related to this string
@@ -237,13 +246,6 @@ class MaxResults(private val max: Int = 100) : EndpointKeyValue {
  * Metadata is available for both English (default) and Spanish (v=es) vocabularies.
  * */
 class Metadata(private val flags: EnumSet<Flag>) : EndpointKeyValue {
-    companion object {
-        fun flags(vararg flags: MetadataFlag) : EnumSet<MetadataFlag> {
-            val enumSet = EnumSet.noneOf(Flag::class.java)
-            enumSet.addAll(flags)
-            return enumSet
-        }
-    }
     enum class Flag(val identifier: String) {
         /**
          * Produced in the defs field of the result object. The definitions are from WordNet.
@@ -301,12 +303,15 @@ class Metadata(private val flags: EnumSet<Flag>) : EndpointKeyValue {
         }
 }
 
+fun flagsOf(vararg flags: MetadataFlag): EnumSet<MetadataFlag> {
+    val enumSet = EnumSet.noneOf(Metadata.Flag::class.java)
+    enumSet.addAll(flags)
+    return enumSet
+}
+
 /**
  * Combines metadata flags
  * */
 infix fun EnumSet<Metadata.Flag>.and(other: Metadata.Flag): EnumSet<Metadata.Flag> =
     of(other, *this.toTypedArray())
 
-operator fun EnumSet<MetadataFlag>?.plusAssign(other: MetadataFlag?) {
-    this?.add(other)
-}

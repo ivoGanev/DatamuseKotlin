@@ -16,7 +16,7 @@
 package com.ivo.ganev.datamuse_kotlin.configuration
 
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
-import com.ivo.ganev.datamuse_kotlin.exceptions.UnspecifiedHardConstraintException
+import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 import java.util.*
 
 abstract class EndpointBuilder<out T : QueryConfig>
@@ -30,11 +30,12 @@ abstract class EndpointBuilder<out T : QueryConfig>
  * words/ endpoint. Usage: [buildWordsEndpointUrl]
  * */
 class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
+
     /**
      * Set this to provide a hard constraint
      * @see [HardConstraint]
      * */
-    var hardConstraint: HardConstraint? = null
+    var hardConstraint: Set<HardConstraint?> = emptySet()
 
     /**
      * Set this to add topics to the query
@@ -82,7 +83,6 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
  * Builds the URL address for the Datamuse API. In order to be able to build a URL you need to
  * provide at least a hard constraint.
  *
- *
  * Usage:
  *
  * ```
@@ -95,16 +95,16 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
  *  metadata = MetadataFlag.DEFINITIONS and Metadata.Flag.PARTS_OF_SPEECH
  * }
  * ```
- * @throws UnspecifiedHardConstraintException - when no hard constraint is specified.
+ * @throws IllegalHardConstraintState - when no hard constraint is specified.
  * Reason: An endpoint with no hard constraint will yield no result.
  * */
 fun buildWordsEndpointUrl(wordsConfig: WordsEndpointBuilder.() -> Unit):
         WordsEndpointBuilder {
     val builder = WordsEndpointBuilder()
     builder.wordsConfig()
-    if (builder.hardConstraint == null)
-        throw UnspecifiedHardConstraintException(
-            "You need to provide a hard constraint in order to build a URL for the API"
+    if (builder.hardConstraint.isEmpty())
+        throw IllegalHardConstraintState(
+            "The hard constraint set is empty. You need to provide at least one hard constraint in order to build a URL for the API."
         )
     return builder
 }

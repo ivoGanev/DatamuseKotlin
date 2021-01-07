@@ -18,4 +18,4 @@ package com.ivo.ganev.datamuse_kotlin.exceptions
 /**
  * Thrown when a hard constraint has not been specified
  * */
-class UnspecifiedHardConstraintException(message: String?) : Exception(message)
+class IllegalHardConstraintState(message: String?) : Exception(message)

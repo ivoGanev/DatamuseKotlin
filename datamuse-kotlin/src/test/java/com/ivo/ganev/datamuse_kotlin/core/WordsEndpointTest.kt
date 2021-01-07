@@ -7,7 +7,7 @@ import com.ivo.ganev.datamuse_kotlin.endpoint.words.and
 import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.MetadataFlag
-import com.ivo.ganev.datamuse_kotlin.exceptions.UnspecifiedHardConstraintException
+import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
@@ -29,7 +29,7 @@ class WordsEndpointTest {
         try {
             buildWordsEndpointUrl {}
             fail()
-        } catch (e: UnspecifiedHardConstraintException) {
+        } catch (e: IllegalHardConstraintState) {
         }
 
         // words with a meaning similar to ringing in the ears
