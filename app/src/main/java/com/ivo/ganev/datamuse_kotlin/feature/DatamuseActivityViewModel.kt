@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.ivo.ganev.datamuse_kotlin.client.DatamuseClient
 import com.ivo.ganev.datamuse_kotlin.configuration.EndpointBuilder
 import com.ivo.ganev.datamuse_kotlin.configuration.QueryConfig
+import com.ivo.ganev.datamuse_kotlin.configuration.WordsEndpointQueryConfig
 import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class DatamuseActivityViewModel : ViewModel() {
         MutableLiveData<String>()
     }
 
-    fun makeNetworkRequest(config: EndpointBuilder<QueryConfig>) {
+    fun makeNetworkRequest(config: EndpointBuilder<WordsEndpointQueryConfig>) {
         viewModelScope.launch {
             val get = client.queryWordsEndpoint(config)
             get.applyEither(

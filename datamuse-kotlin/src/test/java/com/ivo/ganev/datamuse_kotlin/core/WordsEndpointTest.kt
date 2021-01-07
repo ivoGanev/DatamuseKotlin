@@ -6,7 +6,11 @@ import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.RelatedWords.
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.and
 import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint
+import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.*
+import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.SpelledLike
+import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.MeansLike
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.MetadataFlag
+import com.ivo.ganev.datamuse_kotlin.endpoint.words.hardConstraintsOf
 import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 
 import org.amshove.kluent.shouldBeEqualTo
@@ -32,40 +36,53 @@ class WordsEndpointTest {
         } catch (e: IllegalHardConstraintState) {
         }
 
-        // words with a meaning similar to ringing in the ears
+        // Tests for:
+        // single hard constraint
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.MeansLike("ringing in the ears")
+            hardConstraints = hardConstraintsOf(MeansLike("ringing in the ears"))
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
 
-        // words sounding like duck and rice to a maximum of 20
+        // infix "and" for hard constraints
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.SoundsLike("duck and rice")
+            hardConstraints = MeansLike("ringing in the ears") and
+                    SoundsLike("a*") and
+                    RelatedWords(ANTONYMS, "related")
+        }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears&sl=a*&rel_ant=related"
+
+        // max results
+        buildWordsEndpointUrl {
+            hardConstraints =  hardConstraintsOf(SoundsLike("duck and rice"))
             maxResults = 20
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
 
+        // left context
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.SpelledLike("men")
+            hardConstraints = hardConstraintsOf(SpelledLike("men"))
             leftContext = "sweet"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
 
+        // left and right context
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.RelatedWords(POPULAR_ADJECTIVES, "sea")
+            hardConstraints = hardConstraintsOf(RelatedWords(POPULAR_ADJECTIVES, "sea"))
             rightContext = "awake"
             leftContext = "mate"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
 
+        // topics
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.RelatedWords(ANTONYMS, "ocean")
+            hardConstraints = hardConstraintsOf(RelatedWords(ANTONYMS, "ocean"))
             topics = "temperature"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
 
+        // metadata infix "and"
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.RelatedWords(ANTONYMS, "girl")
+            hardConstraints = hardConstraintsOf(RelatedWords(ANTONYMS, "girl"))
             metadata = METADATA_ALL
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
 
+        // full words endpoint test
         buildWordsEndpointUrl {
-            hardConstraints = HardConstraint.RelatedWords(COMPRISES, "complete test")
+            hardConstraints = hardConstraintsOf(RelatedWords(COMPRISES, "complete test"))
             leftContext = "left"
             rightContext = "right"
             topics = "topic"

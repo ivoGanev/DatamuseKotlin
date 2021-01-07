@@ -36,8 +36,8 @@ import com.ivo.ganev.datamuse_kotlin.extenstions.isWithId
 import com.ivo.ganev.datamuse_kotlin.extenstions.string
 import com.ivo.ganev.datamuse_kotlin.extenstions.toInt
 import com.ivo.ganev.datamuse_kotlin.feature.adapter.HardConstraintAdapter
-import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.*
-import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.RelatedWordsElement.codeMap
+import com.ivo.ganev.datamuse_kotlin.feature.ConstraintElement.*
+import com.ivo.ganev.datamuse_kotlin.feature.ConstraintElement.RelatedWordsElement.codeMap
 import java.util.*
 
 class DatamuseActivity : AppCompatActivity(),

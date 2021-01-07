@@ -201,7 +201,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cb_word_frequency" />
 
-    <com.ivo.ganev.datamuse_kotlin.ChipGroupConstraints
+    <com.ivo.ganev.datamuse_kotlin.feature.views.ChipGroupConstraints
         android:id="@+id/cg_hard_constraints"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_lc"
         app:singleLine="true">
 
-    </com.ivo.ganev.datamuse_kotlin.ChipGroupConstraints>
+    </com.ivo.ganev.datamuse_kotlin.feature.views.ChipGroupConstraints>
 
     <Button
         android:id="@+id/btn_add_constraint"

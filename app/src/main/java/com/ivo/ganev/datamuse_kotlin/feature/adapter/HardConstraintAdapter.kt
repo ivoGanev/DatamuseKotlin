@@ -23,7 +23,7 @@ import android.widget.BaseAdapter
 import android.widget.SpinnerAdapter
 import android.widget.TextView
 import com.ivo.ganev.datamuse_kotlin.R
-import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.*
+import com.ivo.ganev.datamuse_kotlin.feature.ConstraintElement.*
 
 class HardConstraintAdapter(
     context: Context,

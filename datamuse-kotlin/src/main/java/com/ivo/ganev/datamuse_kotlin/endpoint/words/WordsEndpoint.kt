@@ -21,8 +21,12 @@ import java.util.EnumSet.of
 
 typealias MetadataFlag = Metadata.Flag
 
-fun hardConstraintsOf(vararg hardConstraint: HardConstraint): Set<HardConstraint> {
-    return setOf(*hardConstraint)
+fun hardConstraintsOf(vararg hardConstraint: HardConstraint): List<HardConstraint> {
+    return listOf(*hardConstraint)
+}
+
+infix fun List<HardConstraint>.and(other: HardConstraint) : List<HardConstraint> {
+    return hardConstraintsOf(*this.toTypedArray(), other)
 }
 
 sealed class HardConstraint(override val value: String) : EndpointKeyValue {
@@ -30,7 +34,7 @@ sealed class HardConstraint(override val value: String) : EndpointKeyValue {
     /**
      * Combines the two hard constraints into a set of [HardConstraint]
      * */
-    infix fun and(other: HardConstraint) : Set<HardConstraint> = hardConstraintsOf(this, other)
+    infix fun and(other: HardConstraint) : List<HardConstraint> = hardConstraintsOf(this, other)
 
     /**
      * 	Means like constraint: require that the results have a meaning related to this string

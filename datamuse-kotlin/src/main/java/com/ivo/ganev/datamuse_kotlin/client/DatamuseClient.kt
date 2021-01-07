@@ -36,14 +36,18 @@ class DatamuseClient  {
     private val wordResponseDecoder = WordResponseDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
-    suspend fun queryWordsEndpoint(builder: EndpointBuilder<QueryConfig>):
+    /**
+     * This function will call the async version of it. You can use this one to
+     * update live data without await-ing.
+     * */
+    suspend fun queryWordsEndpoint(builder: EndpointBuilder<WordsEndpointQueryConfig>):
             QueryResponse<RemoteFailure, Set<WordResponse>> =
         queryWordsEndpointAsync(builder).await()
 
     /**
      * Will query the Datamuse API asynchronously
      * */
-    private fun queryWordsEndpointAsync(builder: EndpointBuilder<QueryConfig>) =
+    fun queryWordsEndpointAsync(builder: EndpointBuilder<WordsEndpointQueryConfig>) =
         GlobalScope.async(Dispatchers.IO) {
             val request: Request = Request.Builder()
                 .url(builder.buildUrl())

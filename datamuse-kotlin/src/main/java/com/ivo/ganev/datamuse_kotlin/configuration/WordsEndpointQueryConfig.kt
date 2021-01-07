@@ -31,7 +31,7 @@ abstract class QueryConfig {
 }
 
 open class WordsEndpointQueryConfig(
-    @JvmField val hardConstraints: List<HardConstraint?>,
+    @JvmField val hardConstraints: List<HardConstraint?> = emptyList(),
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,
     @JvmField val rightContext: RightContext? = null,

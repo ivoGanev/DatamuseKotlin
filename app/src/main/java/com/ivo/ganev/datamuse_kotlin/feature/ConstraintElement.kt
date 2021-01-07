@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ivo.ganev.datamuse_kotlin.feature.api
+package com.ivo.ganev.datamuse_kotlin.feature
 
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.HardConstraint.*
