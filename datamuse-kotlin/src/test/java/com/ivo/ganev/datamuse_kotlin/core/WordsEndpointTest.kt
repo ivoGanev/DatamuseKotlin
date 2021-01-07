@@ -34,38 +34,38 @@ class WordsEndpointTest {
 
         // words with a meaning similar to ringing in the ears
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.MeansLike("ringing in the ears")
+            hardConstraints = HardConstraint.MeansLike("ringing in the ears")
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "ml=ringing%20in%20the%20ears"
 
         // words sounding like duck and rice to a maximum of 20
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.SoundsLike("duck and rice")
+            hardConstraints = HardConstraint.SoundsLike("duck and rice")
             maxResults = 20
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sl=duck%20and%20rice&max=20"
 
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.SpelledLike("men")
+            hardConstraints = HardConstraint.SpelledLike("men")
             leftContext = "sweet"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "sp=men&lc=sweet"
 
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.RelatedWords(POPULAR_ADJECTIVES, "sea")
+            hardConstraints = HardConstraint.RelatedWords(POPULAR_ADJECTIVES, "sea")
             rightContext = "awake"
             leftContext = "mate"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_jjb=sea&lc=mate&rc=awake"
 
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "ocean")
+            hardConstraints = HardConstraint.RelatedWords(ANTONYMS, "ocean")
             topics = "temperature"
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=ocean&topics=temperature"
 
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.RelatedWords(ANTONYMS, "girl")
+            hardConstraints = HardConstraint.RelatedWords(ANTONYMS, "girl")
             metadata = METADATA_ALL
         }.buildUrl() shouldBeEqualTo ENDPOINTS_URL + "rel_ant=girl&md=dpsrf"
 
         buildWordsEndpointUrl {
-            hardConstraint = HardConstraint.RelatedWords(COMPRISES, "complete test")
+            hardConstraints = HardConstraint.RelatedWords(COMPRISES, "complete test")
             leftContext = "left"
             rightContext = "right"
             topics = "topic"

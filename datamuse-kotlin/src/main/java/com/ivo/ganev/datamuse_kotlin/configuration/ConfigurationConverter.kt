@@ -29,7 +29,10 @@ class ConfigurationConverter {
                 scheme(queryConfig.scheme)
                 host(queryConfig.authority)
                 addPathSegment(queryConfig.path)
-                for (element in endpointKeyValue.filterNotNull()) addQueryParameter(element.key, element.value)
+                for (element in endpointKeyValue.filterNotNull()) {
+                    if (element.value.isNotEmpty())
+                        addQueryParameter(element.key, element.value)
+                }
             }.toString()
         }
     }

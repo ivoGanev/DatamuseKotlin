@@ -20,29 +20,35 @@ import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
+import android.widget.CheckBox
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.ivo.ganev.datamuse_kotlin.R
 import com.ivo.ganev.datamuse_kotlin.common.buildToString
 import com.ivo.ganev.datamuse_kotlin.common.format
+import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.databinding.DatamuseDemoActivityBinding
+import com.ivo.ganev.datamuse_kotlin.endpoint.words.MetadataFlag
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element.*
+import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 import com.ivo.ganev.datamuse_kotlin.extenstions.isWithId
 import com.ivo.ganev.datamuse_kotlin.extenstions.string
+import com.ivo.ganev.datamuse_kotlin.extenstions.toInt
 import com.ivo.ganev.datamuse_kotlin.feature.adapter.HardConstraintAdapter
 import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.*
 import com.ivo.ganev.datamuse_kotlin.feature.api.ConstraintElement.RelatedWordsElement.codeMap
-import com.ivo.ganev.datamuse_kotlin.feature.api.UrlModel
-
+import java.util.*
 
 class DatamuseActivity : AppCompatActivity(),
     View.OnClickListener, AdapterView.OnItemSelectedListener {
 
+    /*
+     * Each MetadataFlag from the activity corresponds to a checkbox.
+     * */
+    private lateinit var metadataCheckboxMap: Map<MetadataFlag, CheckBox>
     private lateinit var binding: DatamuseDemoActivityBinding
     private lateinit var constraintAdapter: HardConstraintAdapter
-    private lateinit var modelBuilder: UrlModel
 
     private val viewModel: DatamuseActivityViewModel by viewModels()
 
@@ -54,14 +60,23 @@ class DatamuseActivity : AppCompatActivity(),
 
         binding.tvResponse.movementMethod = ScrollingMovementMethod()
         binding.relatedWordsSpinner.adapter = ArrayAdapter(this, R.layout.spinner_item, codeMap.keys.toList())
-        modelBuilder = UrlModel(binding)
+
+        metadataCheckboxMap = mapOf(
+            MetadataFlag.DEFINITIONS to binding.cbDefinitions,
+            MetadataFlag.PARTS_OF_SPEECH to binding.cbPartsOfSpeech,
+            MetadataFlag.PRONUNCIATIONS to binding.cbPronunciation,
+            MetadataFlag.SYLLABLE_COUNT to binding.cbSyllableCount,
+            MetadataFlag.WORD_FREQUENCY to binding.cbWordFrequency
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DatamuseDemoActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         configure()
+
         viewModel.result.observe(this, { wordResponseSet ->
             var i = 0
             binding.tvResponse.text = ""
@@ -96,11 +111,10 @@ class DatamuseActivity : AppCompatActivity(),
             binding.tvResponse.text = it.toString()
         })
 
-        // There should be global response providing a parse function
-        // and extracting each element
-
+        viewModel.url.observe(this, {
+            binding.tvUrl.text = it
+        })
     }
-
 
     override fun onClick(v: View?) {
         when {
@@ -116,18 +130,36 @@ class DatamuseActivity : AppCompatActivity(),
         binding.cgHardConstraints.addConstraint(constraint)
     }
 
-    // if a query button gets clicked I need to make a network request
-    // meaning:
-    // 1. Collect all the data from the activity and send it to the view model.
+    /**
+     * Collects all the data from the activity's views and passes it on to
+     * the view model to make a query.
+     * */
     private fun onQuery() {
-        // start by taking the hard constraint
+        val hardConstraints = binding.cgHardConstraints.getConstraints()
+        val topics = binding.etTopics.string()
+        val leftContext = binding.etLc.string()
+        val rightContext = binding.etRc.string()
+        val maxResults = binding.etMaxResults.toInt()
 
-        val hardConstraints = binding.cgHardConstraints
-       // val config = modelBuilder.build()
-     //   binding.tvUrl.text = config.buildUrl()
-      //  viewModel.makeNetworkRequest(modelBuilder.build())
+        // filter all checkboxes and extract the MetadataFlags's
+        val flags = metadataCheckboxMap.filter { it.value.isChecked }.keys
+        val metadata = EnumSet.noneOf(MetadataFlag::class.java)
+        metadata.addAll(flags)
+
+        try {
+            val query = buildWordsEndpointUrl {
+                this.hardConstraints = hardConstraints
+                this.topics = topics
+                this.leftContext = leftContext
+                this.rightContext = rightContext
+                this.maxResults = maxResults
+                this.metadata = metadata
+            }
+            viewModel.makeNetworkRequest(query)
+        } catch (e: IllegalHardConstraintState) {
+            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+        }
     }
-
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent isWithId R.id.hard_constraint_spinner) {

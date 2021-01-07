@@ -31,7 +31,7 @@ abstract class QueryConfig {
 }
 
 open class WordsEndpointQueryConfig(
-    @JvmField val hardConstraint: Set<HardConstraint?>,
+    @JvmField val hardConstraints: List<HardConstraint?>,
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,
     @JvmField val rightContext: RightContext? = null,
@@ -43,7 +43,7 @@ open class WordsEndpointQueryConfig(
         get() = "words"
 
     override fun getQuery(): List<EndpointKeyValue?> {
-        return listOf(*hardConstraint.toTypedArray(), topic, leftContext, rightContext, maxResults, metadata)
+        return listOf(*hardConstraints.toTypedArray(), topic, leftContext, rightContext, maxResults, metadata)
     }
 }
 

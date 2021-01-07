@@ -31,3 +31,7 @@ infix fun View?.isWithId(id: Int) : Boolean {
 fun EditText.string() : String {
     return this.text.toString()
 }
+
+fun EditText.toInt() : Int {
+    return Integer.parseInt(this.string())
+}

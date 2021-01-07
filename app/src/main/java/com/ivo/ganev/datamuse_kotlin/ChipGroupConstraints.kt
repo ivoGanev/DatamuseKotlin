@@ -63,4 +63,6 @@ class ChipGroupConstraints(context: Context, attrs: AttributeSet) : ChipGroup(co
             constraints.removeAt(index)
         }
     }
+
+    fun getConstraints() = constraints.map { it.second }
 }

@@ -35,7 +35,7 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
      * Set this to provide a hard constraint
      * @see [HardConstraint]
      * */
-    var hardConstraint: Set<HardConstraint?> = emptySet()
+    var hardConstraints: List<HardConstraint?> = emptyList()
 
     /**
      * Set this to add topics to the query
@@ -69,7 +69,7 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
 
      override fun build(): WordsEndpointQueryConfig {
         return WordsEndpointQueryConfig(
-            hardConstraint,
+            hardConstraints,
             topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },
             rightContext?.let { RightContext(it) },
@@ -102,7 +102,7 @@ fun buildWordsEndpointUrl(wordsConfig: WordsEndpointBuilder.() -> Unit):
         WordsEndpointBuilder {
     val builder = WordsEndpointBuilder()
     builder.wordsConfig()
-    if (builder.hardConstraint.isEmpty())
+    if (builder.hardConstraints.isEmpty())
         throw IllegalHardConstraintState(
             "The hard constraint set is empty. You need to provide at least one hard constraint in order to build a URL for the API."
         )

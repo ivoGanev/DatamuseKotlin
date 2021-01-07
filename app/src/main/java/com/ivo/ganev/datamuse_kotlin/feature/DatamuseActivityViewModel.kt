@@ -36,6 +36,10 @@ class DatamuseActivityViewModel : ViewModel() {
         MutableLiveData<Set<WordResponse>>()
     }
 
+    val url: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
     fun makeNetworkRequest(config: EndpointBuilder<QueryConfig>) {
         viewModelScope.launch {
             val get = client.queryWordsEndpoint(config)
@@ -43,5 +47,7 @@ class DatamuseActivityViewModel : ViewModel() {
                 { remoteFailure -> failure.postValue(remoteFailure) },
                 { result.postValue(it) })
         }
+
+        url.value = config.buildUrl()
     }
 }
