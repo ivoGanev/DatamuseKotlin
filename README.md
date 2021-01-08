@@ -24,23 +24,21 @@ The most easy way to create a query is using the buildWordsEndpoint { } function
 
 ```kotlin
  /*
- * Use the buildWordsEndpointUrl builder function to create
- * an endpoints configuration. In this example, you build a
- * query to look for: A word which has a meaning related to
- * "elephant" where the left context is "big", maximum
- * number of results will be ten, and also will display the
- * definitions of each of those words.
- * */
-val query1 = buildWordsEndpointUrl {
+* Use the words endpoint builder function to create
+* an endpoints configuration. In this example, you will build a
+* query to look for: A word which has a meaning related to
+* "elephant" where the left context is "big", maximum
+* number of results will be ten, with definitions included.
+* */
+val query1 = wordsBuilder {
     hardConstraints = hardConstraintsOf(HardConstraint.MeansLike("elephant"))
     leftContext = "big"
     maxResults = 10
-    metadata = flagsOf(MetadataFlag.WORD_FREQUENCY)
+    metadata = flagsOf(MetadataFlag.DEFINITIONS)
 }
 
 // https://api.datamuse.com/words?ml=elephant&lc=big&max=10&md=d
-println(query1.buildUrl())
-
+println(query1.build().toUrl())
    ```
    
 ## Yet another query
@@ -49,11 +47,11 @@ This time let's create a little more complex example.
 ```kotlin
 
 /*
- * Another configuration which won't return anything because the query is
- * complex and meaningless. Never the less it demonstrates how to assign
- *  all the properties to create a query
+ * Another configuration. For demonstration purposes we will
+ * create a query with all the builder properties assigned, but
+ * be aware that this query won't be able to return anything meaningful.
  * */
-val query2 = buildWordsEndpointUrl {
+val query2 = wordsBuilder {
     // you can chain constraints with the help of "and" infix function
     hardConstraints = HardConstraint.RelatedWords(HardConstraint.RelatedWords.Code.ANTONYMS, "duck") and
             HardConstraint.SpelledLike("b*")
@@ -66,7 +64,7 @@ val query2 = buildWordsEndpointUrl {
 }
 
 // https://api.datamuse.com/words?rel_ant=duck&sp=b*&topics=sweet%2C%20little&lc=left%20context&rc=right%20context&max=100&md=drf
-println(query2.buildUrl())
+println(query2.build().toUrl())
 
    ```
         
@@ -88,11 +86,11 @@ To decouple your app you might want to put the client inside a ViewModel
 ```kotlin
 
 class DatamuseActivityViewModel : ViewModel() {
-    private val client = DatamuseClient()
+    private val client = DatamuseKotlinClient()
 
     /**
-     * If there are any errors or failures this will notify all
-     * of the observers.
+     * If there are any errors or failures this property will
+     * notify all attached observers.
      * */
     val failure: MutableLiveData<RemoteFailure> by lazy {
         MutableLiveData<RemoteFailure>()
@@ -100,14 +98,14 @@ class DatamuseActivityViewModel : ViewModel() {
 
     /**
      * As soon as the query has been returned and there are no
-     * errors this will notify all the observers.
+     * errors, this property will notify all attached observers.
      * */
     val result: MutableLiveData<Set<WordResponse>> by lazy {
         MutableLiveData<Set<WordResponse>>()
     }
 
     /**
-     * As soon as the query is made this will produce the entire URL.
+     *  As soon as the query is made this will be updated with the URL
      * */
     val url: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
@@ -115,31 +113,30 @@ class DatamuseActivityViewModel : ViewModel() {
 
     /**
      * The function will query the Datamuse client for response.
-     * It will either set the value of [failure] or [result] and set the value for [url].
+     * It will either set the value of [failure] or [result] and update the value for [url].
      * */
-    fun makeNetworkRequest(config: EndpointBuilder<WordsEndpointQueryConfig>) {
+    fun makeNetworkRequest(config: EndpointConfiguration) {
         viewModelScope.launch {
-            val get = client.queryWordsEndpoint(config)
+            val get = client.query(config)
             get.applyEither(
                 { remoteFailure -> failure.postValue(remoteFailure) },
                 { result.postValue(it) })
         }
 
-        url.value = config.buildUrl()
+        url.value = config.toUrl()
     }
 }
-
 ```
 
 ## Without a ViewModel
-This time we will use the queryWordsEndpointAsync() to await for the result.
+This time we will use the async query to await for the result.
 
 ```kotlin
 
 // The query is suspendable function so you should launch it from a coroutine
 GlobalScope.launch(Dispatchers.Main) {
     // await for the result
-    val query = datamuseClient.queryWordsEndpointAsync(query1).await()
+    val wordsQuery = datamuseClient.queryAsync(query1.build()).await()
     //..
  ```
 
@@ -147,44 +144,84 @@ GlobalScope.launch(Dispatchers.Main) {
 Continuing from the previous code:
  ```kotlin
    //..
-    query.applyEither({
-        // Will trigger only when there is some kind of a failure, usually a bad response code.
-            remoteFailure ->
-        when (remoteFailure) {
-            is RemoteFailure.HttpCodeFailure -> println(remoteFailure.failureCode) // Failed Http Response codes?
-            is RemoteFailure.MalformedJsonBodyFailure -> println(remoteFailure.message) // Any serialization error.
-        }
-    }, {
-        // This part of the function will be applied when a successful query has been made.
-
-        // wordResponses: is the collection of words and their properties returned from the query, for example,
-        // in query1 we've build a query to look for words with a similar meaning of an
-        // "elephant" where the left context was "big", meaning we will be looking for words
-        // that are closely related to "big elephant". Here a part of the response in JSON would look like:
-        // {"word":"jumbo","score":57932,"tags":["adj","f:1.176501"}
-        //  where wordResponses as a Set<WordResponse> will contain:
-        //  WordResponse.Element.Word, WordResponse.Element.Score, WordResponse.Element.Tags(the API will return
-        //  this even if you didn't specified it explicitly). The rest of the elements will be discarded.
-            wordResponses ->
-        wordResponses.forEach {
-            for (element in it.elements) {
-                when (element) {
-                    is WordResponse.Element.Word -> queryTextView.append("\nWord: ${element.word}")
-                    is WordResponse.Element.Score ->  queryTextView.append("\n Score: ${element.score}")
-                    // you can use format() to separate the part of word from the definition because the response comes as:
-                    // "defs":["adj\tof great mass; huge and bulky"]}
-                    is WordResponse.Element.Definitions ->  queryTextView.append("\n Definitions: ${element.format().string()}")
-                    is WordResponse.Element.Tags ->  queryTextView.append("\n Tags: ${element.tags}")
-                    is WordResponse.Element.SyllablesCount ->  queryTextView.append("\n Syllable Count: ${element.numSyllables}")
-                    is WordResponse.Element.DefHeadwords ->  queryTextView.append("\n DefHeadwords ${element.defHeadword}")
+  wordsQuery.applyEither({
+                // Will trigger only when there is some kind of a failure, usually a bad response code.
+                    remoteFailure ->
+                when (remoteFailure) {
+                    is RemoteFailure.HttpCodeFailure -> println(remoteFailure.failureCode) // Failed Http Response codes?
+                    is RemoteFailure.MalformedJsonBodyFailure -> println(remoteFailure.message) // Any serialization error.
                 }
-            }
+            }, {
+                // This part of the function will be applied when a successful query has been made.
+
+                // wordResponses: is the collection of words and their properties returned from the query, for example,
+                // in query1 we've build a query to look for words with a similar meaning of an
+                // "elephant" where the left context was "big", meaning we will be looking for words
+                // that are closely related to "big elephant". Here a part of the response in JSON would look like:
+                // {"word":"jumbo","score":57932,"tags":["adj","f:1.176501"}
+                //  where wordResponses as a Set<WordResponse> will contain:
+                //  WordResponse.Element.Word, WordResponse.Element.Score, WordResponse.Element.Tags(the API will return
+                //  this even if you didn't specified it explicitly). The rest of the elements will be discarded.
+                    wordResponses ->
+                wordResponses.forEach {
+                    for (element in it.elements) {
+                        when (element) {
+                            is WordResponse.Element.Word -> queryTextView.append("\nWord: ${element.word}")
+                            is WordResponse.Element.Score -> queryTextView.append("\n Score: ${element.score}")
+                            // you can use format() to separate the part of word from the definition because the response comes as:
+                            // "defs":["adj\tof great mass; huge and bulky"]}
+                            is WordResponse.Element.Definitions -> queryTextView.append(
+                                "\n Definitions: ${
+                                    element.format().string()
+                                }"
+                            )
+                            is WordResponse.Element.Tags -> queryTextView.append("\n Tags: ${element.tags}")
+                            is WordResponse.Element.SyllablesCount -> queryTextView.append("\n Syllable Count: ${element.numSyllables}")
+                            is WordResponse.Element.DefHeadwords -> queryTextView.append("\n DefHeadwords ${element.defHeadword}")
+                        }
+                    }
+                }
+            })
         }
-    })
-}
 
 ```
-Check the demo app to see how you can utilize the full functionality of the library.
+
+# Auto complete endpoint
+From https://www.datamuse.com/api/ :
+```
+This resource is useful as a backend for “autocomplete” widgets
+on websites and apps when the vocabulary of possible search terms is very large.
+```
+Here is how to use it:
+```kotlin
+    GlobalScope.launch(Dispatchers.Main) {
+    // making a query for the autocomplete endpoint is easy:
+    val autoComplete = sugBuilder {
+        hint = "swee"
+        maxResults = 10
+    }
+
+    // next we await for the result
+    val sugQuery = datamuseClient.queryAsync(autoComplete.build()).await()
+    if (sugQuery.isResult)
+        sugQuery.applyEither({}, { sugResponse ->
+            // iterate through all the word results
+            sugResponse.forEach {
+                // This is another way to get an element from the query.
+                // You can shorten WordResponse.Element.Word to just Word
+                // by adding it as an import.
+                val wordElement = it[WordResponse.Element.Word::class]
+
+                //sweep,sweet,sweeping,sweetheart..
+                println(wordElement?.word)
+            }
+        })
+}
+```
+# Check Out the Demo App
+Make sure to check the [demo app](/app)
+to see a complete project on how to use the library:
+
 
 # Releases
 The latest release can be found in..(TODO)
