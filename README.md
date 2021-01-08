@@ -1,7 +1,14 @@
 # Datamuse-Kotlin
 Datamuse-Kotlin is a library for calling the Datamuse REST API.
-For more details check https://www.datamuse.com/api/
 
+Check out https://www.datamuse.com/api/ for detailed API information.
+
+# Releases
+This library is available at JCenter.
+
+```
+implementation "com.ivo.ganev:datamuse-kotlin:1.0.0"
+```
 # What is Datamuse?
 ```
 The Datamuse API is a word-finding query engine for developers.
@@ -17,7 +24,7 @@ Applications use the API for a wide range of features, including autocomplete
 on text input fields, search relevancy ranking, assistive writing apps, 
 word games, and more.
 ```
-   
+ 
 ## Create a Datamuse query
 
 The most easy way to create a query is using the endpoint builder function.
@@ -220,11 +227,7 @@ Here is how to use it:
 ```
 # Check Out the Demo App
 Make sure to check the [demo app](/app)
-to see a complete project on how to use the library:
-
-
-# Releases
-The latest release can be found in..(TODO)
+to see a complete project on how to use the library
 
 # License
 ```
