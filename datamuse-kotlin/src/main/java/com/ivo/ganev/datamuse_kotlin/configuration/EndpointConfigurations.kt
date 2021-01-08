@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package com.ivo.ganev.datamuse_kotlin.configuration
 
-import com.ivo.ganev.datamuse_kotlin.endpoint.EndpointKeyValue
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.EndpointKeyValue
+import com.ivo.ganev.datamuse_kotlin.endpoint.sug.Hint
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
 
-abstract class QueryConfig {
+abstract class EndpointConfiguration {
     val scheme = "https"
     val authority = "api.datamuse.com"
 
@@ -30,14 +31,26 @@ abstract class QueryConfig {
     }
 }
 
-open class WordsEndpointQueryConfig(
+open class SugConfiguration(
+    @JvmField val hint: Hint? = null,
+    @JvmField val maxResults: MaxResults? = null
+) : EndpointConfiguration() {
+    override val path: String
+        get() = "sug"
+
+    override fun getQuery(): List<EndpointKeyValue?> {
+        return listOf(hint, maxResults)
+    }
+}
+
+open class WordsConfiguration(
     @JvmField val hardConstraints: List<HardConstraint?> = emptyList(),
     @JvmField val topic: Topic? = null,
     @JvmField val leftContext: LeftContext? = null,
     @JvmField val rightContext: RightContext? = null,
     @JvmField val maxResults: MaxResults? = null,
     @JvmField val metadata: Metadata? = null
-) : QueryConfig() {
+) : EndpointConfiguration() {
 
     override val path: String
         get() = "words"

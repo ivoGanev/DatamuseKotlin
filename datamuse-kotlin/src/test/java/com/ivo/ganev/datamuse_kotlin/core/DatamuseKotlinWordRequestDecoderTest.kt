@@ -1,9 +1,9 @@
 package com.ivo.ganev.datamuse_kotlin.core
 
 import com.ivo.ganev.datamuse_kotlin.common.format
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponseDecoder
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element.*
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.WordResponseDecoder
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse.Element.*
 import kotlinx.serialization.SerializationException
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo

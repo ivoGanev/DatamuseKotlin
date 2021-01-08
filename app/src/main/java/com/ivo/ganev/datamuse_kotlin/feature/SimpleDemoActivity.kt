@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamuse_kotlin.R
-import com.ivo.ganev.datamuse_kotlin.client.DatamuseClient
+import com.ivo.ganev.datamuse_kotlin.client.DatamuseKotlinClient
 import com.ivo.ganev.datamuse_kotlin.common.string
 import com.ivo.ganev.datamuse_kotlin.common.format
-import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse
+import com.ivo.ganev.datamuse_kotlin.endpoint.builders.sugBuilder
+import com.ivo.ganev.datamuse_kotlin.endpoint.builders.wordsBuilder
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
 import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
 import kotlinx.coroutines.Dispatchers
@@ -40,14 +42,14 @@ class SimpleDemoActivity : AppCompatActivity() {
         val queryTextView = findViewById<TextView>(R.id.tv_simple_query)
 
         /*
-      * Use the buildWordsEndpointUrl builder function to create
+      * Use the words endpoint builder function to create
       * an endpoints configuration. In this example, you build a
       * query to look for: A word which has a meaning related to
       * "elephant" where the left context is "big", maximum
       * number of results will be ten, and also will display the
       * definitions of each of those words.
       * */
-        val query1 = buildWordsEndpointUrl {
+        val query1 = wordsBuilder {
             hardConstraints = hardConstraintsOf(HardConstraint.MeansLike("elephant"))
             leftContext = "big"
             maxResults = 10
@@ -55,14 +57,14 @@ class SimpleDemoActivity : AppCompatActivity() {
         }
 
         // https://api.datamuse.com/words?ml=elephant&lc=big&max=10&md=d
-        println(query1.buildUrl())
+        println(query1.build().toUrl())
 
         /*
          * Another configuration which won't return anything because the query is
          * complex and meaningless. Never the less it demonstrates how to assign
          *  all the builder properties to create a query.
          * */
-        val query2 = buildWordsEndpointUrl {
+        val query2 = wordsBuilder {
             // you can chain constraints with the help of "and" infix function
             hardConstraints = HardConstraint.RelatedWords(HardConstraint.RelatedWords.Code.ANTONYMS, "duck") and
                     HardConstraint.SpelledLike("b*")
@@ -75,17 +77,17 @@ class SimpleDemoActivity : AppCompatActivity() {
         }
 
         // https://api.datamuse.com/words?rel_ant=duck&sp=b*&topics=sweet%2C%20little&lc=left%20context&rc=right%20context&max=100&md=drf
-        println(query2.buildUrl())
+        println(query2.build().toUrl())
 
-        val datamuseClient = DatamuseClient()
+        val datamuseClient = DatamuseKotlinClient()
 
         queryTextView.text = ""
         // The query is suspendable function so you should launch it from a coroutine
         GlobalScope.launch(Dispatchers.Main) {
             // await for the result
-            val query = datamuseClient.queryWordsEndpointAsync(query1).await()
+            val wordsQuery = datamuseClient.queryAsync(query1.build()).await()
 
-            query.applyEither({
+            wordsQuery.applyEither({
                 // Will trigger only when there is some kind of a failure, usually a bad response code.
                     remoteFailure ->
                 when (remoteFailure) {
@@ -103,22 +105,46 @@ class SimpleDemoActivity : AppCompatActivity() {
                 //  where wordResponses as a Set<WordResponse> will contain:
                 //  WordResponse.Element.Word, WordResponse.Element.Score, WordResponse.Element.Tags(the API will return
                 //  this even if you didn't specified it explicitly). The rest of the elements will be discarded.
-                wordResponses ->
+                    wordResponses ->
                 wordResponses.forEach {
                     for (element in it.elements) {
                         when (element) {
                             is WordResponse.Element.Word -> queryTextView.append("\nWord: ${element.word}")
-                            is WordResponse.Element.Score ->  queryTextView.append("\n Score: ${element.score}")
+                            is WordResponse.Element.Score -> queryTextView.append("\n Score: ${element.score}")
                             // you can use format() to separate the part of word from the definition because the response comes as:
                             // "defs":["adj\tof great mass; huge and bulky"]}
-                            is WordResponse.Element.Definitions ->  queryTextView.append("\n Definitions: ${element.format().string()}")
-                            is WordResponse.Element.Tags ->  queryTextView.append("\n Tags: ${element.tags}")
-                            is WordResponse.Element.SyllablesCount ->  queryTextView.append("\n Syllable Count: ${element.numSyllables}")
-                            is WordResponse.Element.DefHeadwords ->  queryTextView.append("\n DefHeadwords ${element.defHeadword}")
+                            is WordResponse.Element.Definitions -> queryTextView.append(
+                                "\n Definitions: ${
+                                    element.format().string()
+                                }"
+                            )
+                            is WordResponse.Element.Tags -> queryTextView.append("\n Tags: ${element.tags}")
+                            is WordResponse.Element.SyllablesCount -> queryTextView.append("\n Syllable Count: ${element.numSyllables}")
+                            is WordResponse.Element.DefHeadwords -> queryTextView.append("\n DefHeadwords ${element.defHeadword}")
                         }
                     }
                 }
             })
+        }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val autoComplete = sugBuilder {
+                hint = "swee"
+                maxResults = 10
+            }
+            // await for the result
+            val sugQuery = datamuseClient.queryAsync(autoComplete.build()).await()
+            if (sugQuery.isResult)
+                sugQuery.applyEither({}, { sugResponse ->
+                    // iterate through all the word results
+                    sugResponse.forEach {
+                        val wordElement = it[WordResponse.Element.Word::class]
+
+                        //sweep,sweet,sweeping,sweetheart..
+                        println(wordElement?.word)
+                    }
+                })
+
         }
     }
 }

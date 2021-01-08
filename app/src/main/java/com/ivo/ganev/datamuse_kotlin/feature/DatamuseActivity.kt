@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ivo.ganev.datamuse_kotlin.R
 import com.ivo.ganev.datamuse_kotlin.common.string
 import com.ivo.ganev.datamuse_kotlin.common.format
-import com.ivo.ganev.datamuse_kotlin.configuration.buildWordsEndpointUrl
 import com.ivo.ganev.datamuse_kotlin.databinding.DatamuseDemoActivityBinding
+import com.ivo.ganev.datamuse_kotlin.endpoint.builders.wordsBuilder
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.MetadataFlag
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element.*
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse.Element.*
 import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 import com.ivo.ganev.datamuse_kotlin.extenstions.isWithId
 import com.ivo.ganev.datamuse_kotlin.extenstions.string
@@ -154,7 +154,7 @@ class DatamuseActivity : AppCompatActivity(),
         metadata.addAll(flags)
 
         try {
-            val query = buildWordsEndpointUrl {
+            val query = wordsBuilder {
                 this.hardConstraints = hardConstraints
                 this.topics = topics
                 this.leftContext = leftContext
@@ -162,7 +162,7 @@ class DatamuseActivity : AppCompatActivity(),
                 this.maxResults = maxResults
                 this.metadata = metadata
             }
-            viewModel.makeNetworkRequest(query)
+            viewModel.makeNetworkRequest(query.build())
         } catch (e: IllegalHardConstraintState) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
         }

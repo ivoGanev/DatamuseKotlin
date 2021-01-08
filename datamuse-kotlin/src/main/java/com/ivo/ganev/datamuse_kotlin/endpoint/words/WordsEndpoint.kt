@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.ivo.ganev.datamuse_kotlin.endpoint.words
 
-import com.ivo.ganev.datamuse_kotlin.endpoint.EndpointKeyValue
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.EndpointKeyValue
 import java.util.*
 import java.util.EnumSet.of
 

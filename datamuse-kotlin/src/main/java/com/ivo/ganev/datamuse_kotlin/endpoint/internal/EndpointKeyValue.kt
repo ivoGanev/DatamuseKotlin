@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ivo.ganev.datamuse_kotlin.endpoint
+package com.ivo.ganev.datamuse_kotlin.endpoint.internal
 
 internal interface EndpointKeyValue {
     val key: String

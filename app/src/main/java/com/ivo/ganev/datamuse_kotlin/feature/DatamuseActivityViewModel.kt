@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@ package com.ivo.ganev.datamuse_kotlin.feature
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivo.ganev.datamuse_kotlin.client.DatamuseClient
-import com.ivo.ganev.datamuse_kotlin.configuration.EndpointBuilder
-import com.ivo.ganev.datamuse_kotlin.configuration.QueryConfig
-import com.ivo.ganev.datamuse_kotlin.configuration.WordsEndpointQueryConfig
+import com.ivo.ganev.datamuse_kotlin.client.DatamuseKotlinClient
+import com.ivo.ganev.datamuse_kotlin.configuration.EndpointConfiguration
 import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse
 import kotlinx.coroutines.launch
 
 class DatamuseActivityViewModel : ViewModel() {
-    private val client = DatamuseClient()
+    private val client = DatamuseKotlinClient()
 
     /**
      * If there are any errors or failures this will notify all
@@ -56,14 +54,14 @@ class DatamuseActivityViewModel : ViewModel() {
      * The function will query the Datamuse client for response.
      * It will either set the value of [failure] or [result] and set the value for [url].
      * */
-    fun makeNetworkRequest(config: EndpointBuilder<WordsEndpointQueryConfig>) {
+    fun makeNetworkRequest(config: EndpointConfiguration) {
         viewModelScope.launch {
-            val get = client.queryWordsEndpoint(config)
+            val get = client.query(config)
             get.applyEither(
                 { remoteFailure -> failure.postValue(remoteFailure) },
                 { result.postValue(it) })
         }
 
-        url.value = config.buildUrl()
+        url.value = config.toUrl()
     }
 }

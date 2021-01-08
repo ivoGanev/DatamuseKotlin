@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,19 @@ package com.ivo.ganev.datamuse_kotlin.configuration
 import okhttp3.HttpUrl
 
 /**
- * Converts an endpoint configuration into a URL String
+ * Converts an endpoint configuration into a URL String.
+ * Empty values will automatically be denied from
+ * being added to the query.
  * */
 class ConfigurationConverter {
     companion object {
-        fun convert(queryConfig: QueryConfig): String {
-            val endpointKeyValue = queryConfig.getQuery()
+        fun convert(endpointConfiguration: EndpointConfiguration): String {
+            val endpointKeyValue = endpointConfiguration.getQuery()
 
             return HttpUrl.Builder().apply {
-                scheme(queryConfig.scheme)
-                host(queryConfig.authority)
-                addPathSegment(queryConfig.path)
+                scheme(endpointConfiguration.scheme)
+                host(endpointConfiguration.authority)
+                addPathSegment(endpointConfiguration.path)
                 for (element in endpointKeyValue.filterNotNull()) {
                     if (element.value.isNotEmpty())
                         addQueryParameter(element.key, element.value)

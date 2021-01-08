@@ -1,10 +1,8 @@
 package com.ivo.ganev.datamuse_kotlin.core
 
-import com.ivo.ganev.datamuse_kotlin.client.DatamuseClient
-import com.ivo.ganev.datamuse_kotlin.configuration.EndpointBuilder
-import com.ivo.ganev.datamuse_kotlin.configuration.QueryConfig
-import com.ivo.ganev.datamuse_kotlin.configuration.WordsEndpointQueryConfig
-import com.ivo.ganev.datamuse_kotlin.endpoint.EndpointKeyValue
+import com.ivo.ganev.datamuse_kotlin.client.DatamuseKotlinClient
+import com.ivo.ganev.datamuse_kotlin.configuration.WordsConfiguration
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.EndpointKeyValue
 import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -14,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import java.io.File
 
-class StubConfig(private val url: String) : WordsEndpointQueryConfig() {
+class StubConfig(private val url: String) : WordsConfiguration() {
     override val path: String
         get() = TODO("Not yet implemented")
 
@@ -25,18 +23,10 @@ class StubConfig(private val url: String) : WordsEndpointQueryConfig() {
     override fun toUrl(): String {
         return url
     }
-
-}
-class EndpointBuilderStub(private val url: String) : EndpointBuilder<WordsEndpointQueryConfig>() {
-    override fun build(): WordsEndpointQueryConfig {
-        val w = WordsEndpointQueryConfig()
-        w.toUrl()
-        return StubConfig(url)
-    }
 }
 
 
-class DatamuseClientTest {
+class DatamuseKotlinClientTest {
     private lateinit var body: String
 
     @Before
@@ -56,8 +46,8 @@ class DatamuseClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client = DatamuseClient()
-        val get = client.queryWordsEndpoint(EndpointBuilderStub(url.toString()))
+        val client = DatamuseKotlinClient()
+        val get = client.query(StubConfig(url.toString()))
 
         get.isResult shouldBeEqualTo true
         server.shutdown()
@@ -74,8 +64,8 @@ class DatamuseClientTest {
         server.start(0)
 
         val url = server.url("/v1/fetch/")
-        val client = DatamuseClient()
-        val get = client.queryWordsEndpoint(EndpointBuilderStub(url.toString()))
+        val client = DatamuseKotlinClient()
+        val get = client.query(StubConfig(url.toString()))
 
         get.isFailure shouldBeEqualTo true
         get.applyEither({ if (it is RemoteFailure.HttpCodeFailure) it.failureCode shouldBeEqualTo 400 }, {})

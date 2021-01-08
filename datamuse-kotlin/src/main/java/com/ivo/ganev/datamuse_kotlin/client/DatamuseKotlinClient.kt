@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  */
 package com.ivo.ganev.datamuse_kotlin.client
 
-import com.ivo.ganev.datamuse_kotlin.configuration.EndpointBuilder
-import com.ivo.ganev.datamuse_kotlin.configuration.QueryConfig
-import com.ivo.ganev.datamuse_kotlin.configuration.WordsEndpointBuilder
-import com.ivo.ganev.datamuse_kotlin.configuration.WordsEndpointQueryConfig
+import com.ivo.ganev.datamuse_kotlin.configuration.EndpointConfiguration
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.WordResponseDecoder
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
 import com.ivo.ganev.datamuse_kotlin.response.QueryResponse
 import com.ivo.ganev.datamuse_kotlin.response.RemoteFailure
@@ -29,10 +28,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 /**
- * [DatamuseClient]'s purpose is to make queries to it's endpoints and retrieve
+ * [DatamuseKotlinClient]'s purpose is to make queries to it's endpoints and retrieve
  * the results in a [QueryResponse]
  * */
-class DatamuseClient  {
+class DatamuseKotlinClient  {
     private val wordResponseDecoder = WordResponseDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
@@ -40,17 +39,17 @@ class DatamuseClient  {
      * This function will call the async version of it. You can use this one to
      * update live data without await-ing.
      * */
-    suspend fun queryWordsEndpoint(builder: EndpointBuilder<WordsEndpointQueryConfig>):
+    suspend fun query(configuration: EndpointConfiguration):
             QueryResponse<RemoteFailure, Set<WordResponse>> =
-        queryWordsEndpointAsync(builder).await()
+        queryAsync(configuration).await()
 
     /**
-     * Will query the Datamuse API asynchronously
+     * Makes a raw async query to the API
      * */
-    fun queryWordsEndpointAsync(builder: EndpointBuilder<WordsEndpointQueryConfig>) =
+    fun queryAsync(configuration: EndpointConfiguration) =
         GlobalScope.async(Dispatchers.IO) {
             val request: Request = Request.Builder()
-                .url(builder.buildUrl())
+                .url(configuration.toUrl())
                 .build()
 
             httpClient.newCall(request).execute().use {

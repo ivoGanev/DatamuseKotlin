@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ivo.ganev.datamuse_kotlin.configuration
+package com.ivo.ganev.datamuse_kotlin.endpoint.builders
 
+import com.ivo.ganev.datamuse_kotlin.configuration.WordsConfiguration
 import com.ivo.ganev.datamuse_kotlin.endpoint.words.*
 import com.ivo.ganev.datamuse_kotlin.exceptions.IllegalHardConstraintState
 import java.util.*
 
-abstract class EndpointBuilder<out T : QueryConfig>
-{
-    abstract fun build() : T
-
-    fun buildUrl() : String = build().toUrl()
-}
 /**
- * The [WordsEndpointBuilder] will build [WordsEndpointQueryConfig] for the
- * words/ endpoint. Usage: [buildWordsEndpointUrl]
+ * The [WordsEndpointBuilder] will build [WordsConfiguration] for the
+ * words/ endpoint. Usage: [wordsBuilder]
  * */
-class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
+class WordsEndpointBuilder : EndpointBuilder() {
 
     /**
      * Set this to provide a hard constraint
@@ -67,8 +62,8 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
      * */
     var metadata: EnumSet<MetadataFlag>? = null
 
-     override fun build(): WordsEndpointQueryConfig {
-        return WordsEndpointQueryConfig(
+     override fun build(): WordsConfiguration {
+        return WordsConfiguration(
             hardConstraints,
             topics?.let { Topic(it) },
             leftContext?.let { LeftContext(it) },
@@ -85,7 +80,7 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
  *
  * Usage:
  *
- * ```
+ * ```//TODO Fix outdated code
  * buildWordsEndpointUrl {
  *  hardConstraint = HardConstraint.MeansLike("elephant")
  *  topics = "first,second,third,fourth,fifth"
@@ -98,10 +93,10 @@ class WordsEndpointBuilder : EndpointBuilder<WordsEndpointQueryConfig>() {
  * @throws IllegalHardConstraintState - when no hard constraint is specified.
  * Reason: An endpoint with no hard constraint will yield no result.
  * */
-fun buildWordsEndpointUrl(wordsConfig: WordsEndpointBuilder.() -> Unit):
+fun wordsBuilder(wordsBuilder: WordsEndpointBuilder.() -> Unit):
         WordsEndpointBuilder {
     val builder = WordsEndpointBuilder()
-    builder.wordsConfig()
+    builder.wordsBuilder()
     if (builder.hardConstraints.isEmpty())
         throw IllegalHardConstraintState(
             "The hard constraint set is empty. You need to provide at least one hard constraint in order to build a URL for the API."

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Ivo Ganev Open Source Project
+ * Copyright (C) 2020 Ivo Ganev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ivo.ganev.datamuse_kotlin.endpoint.words
+package com.ivo.ganev.datamuse_kotlin.response
 
-import com.ivo.ganev.datamuse_kotlin.common.format
-import com.ivo.ganev.datamuse_kotlin.common.string
-import com.ivo.ganev.datamuse_kotlin.endpoint.words.WordResponse.Element
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.WordResponseSerializer
+import com.ivo.ganev.datamuse_kotlin.response.WordResponse.Element
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 

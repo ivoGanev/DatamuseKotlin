@@ -13,25 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ivo.ganev.datamuse_kotlin.extenstions
+package com.ivo.ganev.datamuse_kotlin.endpoint.sug
 
-import android.view.View
-import android.widget.EditText
-
-/**
- * Checks if a given id is matched with the view's id
- * */
-infix fun View?.isWithId(id: Int) : Boolean {
-    return this?.id == id
-}
+import com.ivo.ganev.datamuse_kotlin.endpoint.internal.EndpointKeyValue
 
 /**
- * Provides the text value as a String
+ * Prefix hint string; typically, the characters that the user has entered
+ * so far into a search box. (Note: The results are sorted by a measure of popularity.
+ * The results may include spell-corrections of the prefix hint or semantically
+ * similar terms when exact matches cannot be found; that is to say, the prefix
+ * hint will not necessarily form a prefix of each result.)
  * */
-fun EditText.string() : String {
-    return this.text.toString()
-}
-
-fun EditText.toInt() : Int {
-    return Integer.parseInt(this.string())
+class Hint(override val value: String) : EndpointKeyValue {
+    override val key: String = "s"
 }
