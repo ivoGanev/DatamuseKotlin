@@ -2,6 +2,9 @@ plugins {
     id 'java-library'
     id 'kotlin'
     id 'kotlinx-serialization'
+    id 'maven-publish'
+    id 'com.jfrog.bintray'
+    id 'org.jetbrains.dokka'
 }
 
 java {
@@ -20,3 +23,100 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
     testImplementation 'org.amshove.kluent:kluent-android:1.64'
 }
+
+def datamuseVersion = "1.0.0"
+
+bintray {
+    publications = ['MyPublication']
+    user = project.hasProperty('user') ? project.property('user') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('key') ? project.property('key') : System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'android-kotlin' // The repository name in Bintray dashboard
+        name = 'com.ivo.ganev.datamuse-kotlin' // The package name of bintray repository
+        websiteUrl = 'https://github.com/ivoGanev/datamuse-kotlin/'
+        issueTrackerUrl = 'https://github.com/bintray/gradle-bintray-plugin/issues'
+        vcsUrl = 'https://github.com/ivoGanev/datamuse-kotlin.git'
+        licenses = ['Apache-2.0']
+        //    userOrg = 'com.ivo.ganev'
+        desc = "a Datamuse API library for Android for use with Kotlin"
+        labels = ['datamuse', 'kotlin', 'android']
+        publicDownloadNumbers = false
+
+        version {
+            name = '1.0.0-Final' //Bintray logical version name
+            vcsTag = datamuseVersion
+        }
+    }
+
+    // Create the pom configuration:
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        developers {
+            developer {
+                id "ivo-ganev"
+                name "Ivo Ganev"
+                email "ivo.ganev@yahoo.com"
+            }
+        }
+
+        scm {
+            url "https://github.com/ivoGanev/datamuse-kotlin"
+        }
+    }
+
+// Create the publication with the pom configuration:
+// Prior to gradle version 4.8, publishing block was
+// implicitly treated as if all the logic inside it
+// was executed after the project was evaluated.
+// This was only block that behaved this way and
+// this behavior was discontinued post gradle version
+// 4.8 for consistency's sake. sourcesJar task seems
+// to be available only after project evaluation is complete
+// and therefore to maintain behavior it must be explicitly
+// enclosed inside project.afterEvaluate{}
+project.afterEvaluate {
+        publishing {
+            publications {
+                MyPublication(MavenPublication) {
+                    from components.java
+                    artifact(javadocJar)
+                    artifact(sourcesJar)
+                    groupId 'com.ivo.ganev'
+                    artifactId 'datamuse-kotlin'
+                    version datamuseVersion
+                    pom.withXml {
+                        def root = asNode()
+                        root.appendNode('description', 'a Datamuse API library for Android for use with Kotlin')
+                        root.appendNode('name', 'datamuse-kotlin')
+                        root.children().last() + pomConfig
+                    }
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").allSource)
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set("javadoc")
+}
+
+bintrayUpload.doFirst {
+    publications = publishing.publications.collect {
+        it.name
+    }.findAll {
+        it != "kotlinMultiplatform"
+    }
+}
+
+bintrayUpload.dependsOn publishToMavenLocal
