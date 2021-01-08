@@ -128,6 +128,7 @@ class SimpleDemoActivity : AppCompatActivity() {
         }
 
         GlobalScope.launch(Dispatchers.Main) {
+            // making a query for the autocomplete endpoint is easy:
             val autoComplete = sugBuilder {
                 hint = "swee"
                 maxResults = 10
@@ -138,6 +139,9 @@ class SimpleDemoActivity : AppCompatActivity() {
                 sugQuery.applyEither({}, { sugResponse ->
                     // iterate through all the word results
                     sugResponse.forEach {
+                        // This is another way to get an element from the query.
+                        // You can shorten WordResponse.Element.Word to just Word
+                        // by adding it as an import.
                         val wordElement = it[WordResponse.Element.Word::class]
 
                         //sweep,sweet,sweeping,sweetheart..

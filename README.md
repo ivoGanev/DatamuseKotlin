@@ -20,7 +20,7 @@ word games, and more.
    
 ## Create a Datamuse query
 
-The most easy way to create a query is using the buildWordsEndpoint { } function.
+The most easy way to create a query is using the endpoint builder function.
 
 ```kotlin
  /*
