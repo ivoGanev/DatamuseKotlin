@@ -18,6 +18,7 @@ package com.ivo.ganev.datamuse_kotlin.feature
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.ivo.ganev.datamuse_kotlin.R
 import com.ivo.ganev.datamuse_kotlin.client.DatamuseKotlinClient
 import com.ivo.ganev.datamuse_kotlin.common.string
@@ -83,9 +84,9 @@ class SimpleDemoActivity : AppCompatActivity() {
 
         queryTextView.text = ""
         // The query is suspendable function so you should launch it from a coroutine
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             // await for the result
-            val wordsQuery = datamuseClient.queryAsync(query1.build()).await()
+            val wordsQuery = datamuseClient.query(query1.build())
 
             wordsQuery.applyEither({
                 // Will trigger only when there is some kind of a failure, usually a bad response code.
@@ -127,14 +128,14 @@ class SimpleDemoActivity : AppCompatActivity() {
             })
         }
 
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             // making a query for the autocomplete endpoint is easy:
             val autoComplete = sugBuilder {
                 hint = "swee"
                 maxResults = 10
             }
             // await for the result
-            val sugQuery = datamuseClient.queryAsync(autoComplete.build()).await()
+            val sugQuery = datamuseClient.query(autoComplete.build())
             if (sugQuery.isResult)
                 sugQuery.applyEither({}, { sugResponse ->
                     // iterate through all the word results
@@ -148,7 +149,6 @@ class SimpleDemoActivity : AppCompatActivity() {
                         println(wordElement?.word)
                     }
                 })
-
         }
     }
 }
