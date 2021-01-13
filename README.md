@@ -7,7 +7,7 @@ Check out https://www.datamuse.com/api/ for detailed API information.
 This library is available at JCenter.
 
 ```
-implementation "com.ivo.ganev:datamuse-kotlin:1.0.0"
+implementation "com.ivo.ganev:datamuse-kotlin:1.0.1"
 ```
 # What is Datamuse?
 ```
@@ -141,9 +141,9 @@ This time we will use the async query to await for the result.
 ```kotlin
 
 // The query is suspendable function so you should launch it from a coroutine
-GlobalScope.launch(Dispatchers.Main) {
+lifecycleScope.launch(Dispatchers.Main) {
     // await for the result
-    val wordsQuery = datamuseClient.queryAsync(query1.build()).await()
+    val wordsQuery = datamuseClient.query(query1.build())
     //..
  ```
 
@@ -152,6 +152,7 @@ Continuing from the previous code:
  ```kotlin
    //..
   wordsQuery.applyEither({
+				// ..
                 // Will trigger only when there is some kind of a failure, usually a bad response code.
                     remoteFailure ->
                 when (remoteFailure) {
@@ -200,16 +201,17 @@ This resource is useful as a backend for “autocomplete” widgets
 on websites and apps when the vocabulary of possible search terms is very large.
 ```
 Here is how to use it:
+
 ```kotlin
-    GlobalScope.launch(Dispatchers.Main) {
+   
+lifecycleScope.launch(Dispatchers.Main) {
     // making a query for the autocomplete endpoint is easy:
     val autoComplete = sugBuilder {
         hint = "swee"
         maxResults = 10
     }
-
-    // next we await for the result
-    val sugQuery = datamuseClient.queryAsync(autoComplete.build()).await()
+    // await for the result
+    val sugQuery = datamuseClient.query(autoComplete.build())
     if (sugQuery.isResult)
         sugQuery.applyEither({}, { sugResponse ->
             // iterate through all the word results
@@ -224,6 +226,7 @@ Here is how to use it:
             }
         })
 }
+
 ```
 # Check Out the Demo App
 Make sure to check the [demo app](/app)

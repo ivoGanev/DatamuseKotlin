@@ -26,45 +26,40 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.SerializationException
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.IOException
 
 /**
  * [DatamuseKotlinClient]'s purpose is to make queries to it's endpoints and retrieve
  * the results in a [QueryResponse]
  * */
-class DatamuseKotlinClient  {
+class DatamuseKotlinClient {
     private val wordResponseDecoder = WordResponseDecoder()
     private val httpClient: OkHttpClient = OkHttpClient()
 
     /**
-     * This function will call the async version of it. You can use this one to
-     * update live data without await-ing.
+     * Queries the client for a [QueryResponse]. The response contains
+     * either a failure or a result which can be sorted out with [QueryResponse.applyEither]
      * */
-    suspend fun query(configuration: EndpointConfiguration):
-            QueryResponse<RemoteFailure, Set<WordResponse>> =
-        queryAsync(configuration).await()
-
-    /**
-     * Makes a raw async query to the API
-     * */
-    fun queryAsync(configuration: EndpointConfiguration) =
-        GlobalScope.async(Dispatchers.IO) {
+    suspend fun query(configuration: EndpointConfiguration) =
+        withContext(Dispatchers.IO) {
             val request: Request = Request.Builder()
                 .url(configuration.toUrl())
                 .build()
 
-            httpClient.newCall(request).execute().use {
+            val httpCall = httpClient.newCall(request)
+            httpCall.execute().use {
                 if (!it.isSuccessful)
-                    return@async QueryResponse.Failure(RemoteFailure.HttpCodeFailure(it.code))
+                    return@withContext QueryResponse.Failure(RemoteFailure.HttpCodeFailure(it.code))
 
-                val jsonBody = it.body?.string() ?: return@async QueryResponse.Failure(MalformedJsonBodyFailure("Json body is null."))
+                val jsonBody = it.body?.string() ?: return@withContext QueryResponse.Failure(MalformedJsonBodyFailure("Json body is null."))
                 val jsonBodyResponseSet: Set<WordResponse>
 
                 try {
                     jsonBodyResponseSet = wordResponseDecoder.decode(jsonBody)
                 } catch (e: SerializationException) {
-                    return@async QueryResponse.Failure(MalformedJsonBodyFailure(e.message))
+                    return@withContext QueryResponse.Failure(MalformedJsonBodyFailure(e.message))
                 }
-                return@async QueryResponse.Result(jsonBodyResponseSet)
+                return@withContext QueryResponse.Result(jsonBodyResponseSet)
             }
         }
 }
