@@ -3,6 +3,12 @@ Datamuse-Kotlin is a library for calling the Datamuse REST API.
 
 Check out https://www.datamuse.com/api/ for detailed API information.
 
+# Example App
+
+The [example app](https://github.com/ivoGanev/datamuse-kotlin/tree/main/) shows how to use the library.
+
+![alt-text](etc/1610192746252.gif)
+
 # Releases
 This library is available at JCenter.
 
@@ -240,7 +246,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
